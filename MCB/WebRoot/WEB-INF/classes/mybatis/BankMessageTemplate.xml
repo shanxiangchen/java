@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.app.mapper.BankMessageTemplateMapper">
+		<resultMap type="BankMessageTemplate" id="BankMessageTemplateResultMap">
+			<id column="MESSAGE_TEMPLATE_ID" property="messageTemplateId"/>
+			<result column="ADVERTISING_IMG" property="advertisingImg"/>
+			<result column="ADVERTISING_IMG_NAME" property="advertisingImgName"/>
+			<result column="WRITTEN_CONTENT" property="writtenContent"/>
+			<result column="IN_GO_AND_SEE_LINK" property="inGoAndSeeLink"/>
+			<result column="OUT_GO_AND_SEE_LINK" property="outGoAndSeeLink"/>
+			<result column="SMALL_TYPE_NO" property="smallTypeNo"/>
+			<result column="MESSAGE_TITLE" property="messageTitle"/>
+			<result column="type_No" property="typeNo"/>
+			<result column="LINK_WAY" property="linkWay"/>
+			<result column="remark" property="remark"/>
+		</resultMap>
+		
+		<!-- 消息盒子 -->
+		<resultMap type="BankMessageParameterConf" id="BankMessageParameterConfMap">
+			<id column="bmpc_id" property="bmpcId"/>
+			<result column="bmpc_coding" property="bmpcCode"/>
+			<result column="bmpc_url" property="bmpcUrl"/>
+			<result column="bmpc_name" property="bmpcName"/>
+			<result column="value" property="bmpcType"/>
+			
+		</resultMap>
+		
+		<!-- 具体类型 -->
+		<resultMap type="BankMessageSmallType" id="BankMessageSmallTypeResultMap">
+			<id column="SMALL_TYPE_ID" property="smallTypeId"/>
+			<result column="SMALL_TYPE_CODE" property="smallTypeCode"/>
+			<result column="SMALL_TYPE_NAME" property="smallTypeName"/>
+			<result column="TYPE_NO" property="typeNo"/>
+		</resultMap>
+		
+		<!-- 查询消息模板,分页 -->
+		<select id="bankMessageTemplatePageList" resultMap="BankMessageTemplateResultMap" parameterType="BankMessageTemplate">
+				SELECT m.message_template_id,m.advertising_img,m.message_title,
+				m.written_content,m.IN_GO_AND_SEE_LINK,m.OUT_GO_AND_SEE_LINK,m.link_way,m.remark,
+				b.bmpc_name AS typeNo
+				FROM bank_message_parameter_configuration b INNER JOIN bank_message_template m ON
+				b.bmpc_coding=m.type_no
+				WHERE 1 = 1
+			 <if test="typeNo!=null and typeNo!=''">
+				and m.type_no=#{typeNo}
+		     </if>             
+             ORDER BY message_template_id desc
+		</select>
+		 
+		<!--查询消息类型 -->
+		 	<select id="bankMessageParameterConfList" resultMap="BankMessageParameterConfMap" >
+				SELECT bmpc.bmpc_coding,bmpc.bmpc_name FROM bank_message_parameter_configuration bmpc
+			</select>
+		<!--查询具体类型 -->
+			<select id="bankMessageSmallTypeList" resultMap="BankMessageSmallTypeResultMap" parameterType="String">
+				select * from bank_message_small_type where type_no=#{typeNo}
+			</select>
+		 <insert id="saveBankMessageTemplate" parameterType="BankMessageTemplate">
+		    insert into bank_message_template (
+			 	ADVERTISING_IMG,ADVERTISING_IMG_NAME,
+			 	WRITTEN_CONTENT,IN_GO_AND_SEE_LINK,OUT_GO_AND_SEE_LINK,
+			 	type_No,SMALL_TYPE_NO,MESSAGE_TITLE,LINK_WAY,remark)
+			 	values(#{advertisingImg},#{advertisingImgName},
+			 	#{writtenContent},#{inGoAndSeeLink},#{outGoAndSeeLink},
+			 	#{typeNo},#{smallTypeNo},#{messageTitle},#{linkWay},#{remark,jdbcType=VARCHAR})     
+		 </insert>	
+	<select id="getMessageTemplateById" parameterType="int" resultMap="BankMessageTemplateResultMap">
+		SELECT * FROM bank_message_template where message_template_id=#{messageTemplateId}
+	</select>
+	<update id="editMessageTemplate" parameterType="BankMessageTemplate">
+		update bank_message_template set 
+			ADVERTISING_IMG=#{advertisingImg,jdbcType=VARCHAR},
+			ADVERTISING_IMG_NAME=#{advertisingImgName,jdbcType=VARCHAR},
+			WRITTEN_CONTENT=#{writtenContent,jdbcType=VARCHAR},
+			<if test="inGoAndSeeLink != null and inGoAndSeeLink != ''">
+				IN_GO_AND_SEE_LINK=(select LINK_URL from bank_in_link where link_no = #{inGoAndSeeLink}),
+			</if>
+			OUT_GO_AND_SEE_LINK=#{outGoAndSeeLink,jdbcType=VARCHAR},
+			MESSAGE_TITLE=#{messageTitle,jdbcType=VARCHAR},
+			LINK_WAY=#{linkWay,jdbcType=VARCHAR},
+			remark=#{inGoAndSeeLink,jdbcType=VARCHAR}
+			where MESSAGE_TEMPLATE_ID=#{messageTemplateId}
+	</update>
+	<delete id="delMessageTemplate" parameterType="int">
+		delete from bank_message_template where MESSAGE_TEMPLATE_ID=#{messageTemplateId}
+	</delete>
+	</mapper>
+	

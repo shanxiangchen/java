@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.ActivityAndCityGpsMapper">
+	<resultMap type="ActivityAndCityGps" id="activityAndCityGpsResultMap">
+			<id column="activity_and_city_gps_id"  property="activityAndCityGpsId" />
+			<result column="activity_id"  property="activityId" />
+			<result column="city_no"  property="cityNo" />
+	</resultMap>
+	
+	 <insert id="insertActivityAndCityGps" parameterType="java.util.List" keyProperty="activityAndCityGpsId">
+	   insert into bank_activity_and_city_gps(activity_id, city_no)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		    (#{item.activityId}, #{item.cityNo})
+  		</foreach>
+	</insert> 
+	
+	<delete id="deleteActivityAndCityGps"  parameterType="int">
+		delete from bank_activity_and_city_gps where activity_id=#{activityId}
+	</delete>
+
+</mapper>

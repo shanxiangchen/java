@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: csx-hystrix-dashboard
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Administrator
+Implementation-Vendor-Id: com.bosc
+Build-Jdk: 1.8.0_112
+Implementation-URL: https://projects.spring.io/spring-cloud/csx-hystri
+ x-dashboard
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

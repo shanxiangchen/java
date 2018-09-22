@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.MarketShopMapper">
+	<resultMap type="MarketActivityShop" id="marketShopResultMap">
+		<id column="shop_id" property="shopId" />
+		<result column="shop_name" property="shopName" />
+		<result column="shop_address" property="shopAddress" />
+		<result column="shop_phone" property="shopPhone" />
+		<result column="shop_longitude" property="shopLongitude" />
+		<result column="shop_latitude" property="shopLatitude" />
+		<result column="activity_id" property="activityId" />
+		<result column="is_draft" property="isDraft" />
+		<result column="is_open" property="is0pen" />
+	</resultMap>
+	<select id="selectMarketActivityShopListPage" parameterType="MarketActivityShop"
+		resultMap="marketShopResultMap">
+		select * from bank_market_activity_shop where shop_one is null
+		<if test="shopName!=null and shopName!=''">
+			 
+			and shop_name like "%"#{shopName}"%"
+			<!--mysql -->
+			<!-- and shop_name like "%"#{shopName}"%" -->
+		</if>
+		order by shop_id desc
+	</select>
+
+	<insert id="insertMarketActivityShop" parameterType="MarketActivityShop"
+		keyProperty="shopId">
+		 
+		insert into
+		bank_market_activity_shop (shop_id,shop_name, shop_address,
+		shop_phone,activity_id, is_draft,shop_longitude,shop_latitude,
+		is_open)
+		values(#{shopId},#{shopName,jdbcType=VARCHAR},#{shopAddress,jdbcType=VARCHAR},#{shopPhone,jdbcType=VARCHAR},
+		null,#{isDraft,jdbcType=VARCHAR},#{shopLongitude,jdbcType=NUMERIC},#{shopLatitude,jdbcType=NUMERIC},#{is0pen,jdbcType=VARCHAR})
+	</insert>
+
+	<select id="selectMarketActivityShopByShopId" parameterType="String"
+		resultMap="marketShopResultMap">
+		select * from bank_market_activity_shop s where
+		s.shop_id=#{shopId}
+	</select>
+
+	<update id="updateMarketShopById" parameterType="MarketActivityShop">
+		UPDATE
+		bank_market_activity_shop a SET
+		a.shop_name=#{shopName,jdbcType=VARCHAR},
+		a.shop_address=#{shopAddress,jdbcType=VARCHAR},a.shop_phone=#{shopPhone,jdbcType=VARCHAR},
+		a.is_draft=#{isDraft,jdbcType=VARCHAR},a.shop_longitude=#{shopLongitude,jdbcType=NUMERIC},
+		a.shop_latitude=#{shopLatitude,jdbcType=NUMERIC},a.is_open=#{is0pen,jdbcType=VARCHAR}
+		WHERE
+		a.shop_id=#{shopId}
+	</update>
+
+	<select id="selectActIdByShopId" resultMap="marketShopResultMap">
+		select s.shop_id, s.activity_id from bank_market_activity_shop s where
+		s.shop_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<update id="deleteMarketShopById">
+		UPDATE
+		bank_market_activity_shop a SET
+		a.shop_one='1'
+		WHERE a.shop_id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="selectActivityShopPageList" resultMap="marketShopResultMap" parameterType="MarketActivityShop">
+		 select  
+		  shop_id,
+		  shop_name
+		from bank_market_activity_shop
+		where shop_one is null and activity_id is null
+		<if test="shopName!=null and shopName!=''">
+			and shop_name like "%"#{shopName}"%"
+		</if>
+	</select>
+	 
+
+</mapper>

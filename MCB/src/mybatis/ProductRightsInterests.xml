@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.ProductRightsInterestsMapper">
+	<resultMap type="com.app.entity.ProductRightsInterests" id="ProductRightsInterestsResultMap">
+		<id column="PRODUCT_RIGHTS_INTERESTS_ID" property="productRightsInterestsId"/>
+		<result column="PRODUCT_RIGHTS_INTERESTS_NAME" property="productRightsInterestsName"/>
+		<result column="PRODUCT_RIGHTS_INTERESTS_CODE" property="productRightsInterestsCode"/>
+		<result column="PRODUCT_RIGHTS_INTERESTS_TYPE" property="productRightsInterestsType"/>
+		<result column="WHETHER_SUTPPOR_QUERY_DETAIL" property="whetherSutpporQueryDetail"/>
+		<result column="WHETHER_SUTPPOR_APP_PREABOUT" property="whetherSutpporAppPreabout"/>
+	</resultMap>
+	<select id="productRightsInterestsPageList" parameterType="com.app.entity.ProductRightsInterests"  resultMap="ProductRightsInterestsResultMap">
+		select e.* from bank_product_rights_interests e where  product_rights_interests_id  is not null 
+		<if test="productRightsInterestsName!=null and productRightsInterestsName!=''">
+			and PRODUCT_RIGHTS_INTERESTS_NAME like '%${productRightsInterestsName}%'
+		</if>
+		<if test="productRightsInterestsCode!=null and productRightsInterestsCode!=''">
+			and PRODUCT_RIGHTS_INTERESTS_CODE like '%${productRightsInterestsCode}%'
+		</if>
+		ORDER BY  PRODUCT_RIGHTS_INTERESTS_ID DESC 
+	</select>
+	
+		<select id="getCount" parameterType="com.app.entity.ProductRightsInterests" resultType="int">
+			SELECT COUNT(1) FROM BANK_PRODUCT_RIGHTS_INTERESTS where 1=1
+			<if test="productRightsInterestsName!=null and productRightsInterestsName!=''">
+				and PRODUCT_RIGHTS_INTERESTS_NAME like '%${productRightsInterestsName}%'
+			</if>
+			<if test="productRightsInterestsCode!=null and productRightsInterestsCode!=''">
+				and PRODUCT_RIGHTS_INTERESTS_CODE like '%${productRightsInterestsCode}%'
+			</if>
+		</select>
+</mapper>

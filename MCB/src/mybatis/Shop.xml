@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.ShopMapper">
+
+	<resultMap type="Shop" id="shopAndRoleResultMap">
+		<id column="odds_shop_id" property="oddsshopid" />
+		<result column="odds_shop_name" property="oddsshopname" />
+		<result column="odds_shop_address" property="oddsshopaddress" />
+		<result column="odds_shop_longitude" property="oddsshoplongitude" />
+		<result column="odds_shop_latitude" property="oddsshoplatitude" />
+		<result column="odds_shop_phone" property="oddsshopphone" />
+		<result column="odds_shop_privilege" property="oddsshopprivilege" />
+		<result column="odds_shop_city" property="oddsshopcity" />
+		<result column="odds_shop_order" property="oddsshoporder" />
+		<result column="odds_shop_ring" property="oddsshopring" />
+		<result column="odds_shop_privilege_act" property="oddsshopprivilegeact" />
+		<result column="odds_shop_status" property="oddsshopstatus" />
+		<result column="odds_shop_type_id" property="oddsshoptypeid" />
+		<result column="odds_shop_picture_url" property="oddsshoppictureurl" />
+		<result column="odds_shop_picture_name" property="oddsshoppicturename" />
+		<result column="odds_shop_consumption" property="oddsshopconsumption" />
+		<result column="odds_shop_subbranch_name" property="oddsshopsubbranchname" />
+		<result column="odds_shop_favorable_info" property="oddsshopfavorableinfo" />
+		<result column="odds_shop_end_time" property="oddsshopendtime" />
+		<result column="odds_shop_begin_time" property="oddsshopbegintime" />
+		<result column="odds_shop_public_time" property="oddsshoppublictime" />
+		<result column="odds_shop_brief_introduction" property="oddsshopbriefintroduction" />
+		<association property="type" column="odds_shop_type_id"
+			javaType="Type">
+			<id column="odds_shop_type_id" property="oddsshoptypeid" />
+			<result column="odds_shop_type" property="oddsshoptype" />
+		</association>
+		<association property="shopphoto" column="photo_album_id"
+			javaType="ShopPhoto">
+			<id column="photo_album_id" property="photoalbumid" />
+			<result column="photo_url" property="photourl" />
+			<result column="photo_name" property="photoname" />
+			<result column="photo_flag" property="photoflag" />
+			<result column="odds_shop_id" property="oddsshopid" />
+		</association>
+		<!-- a -->
+		<association property="shoppraise" column="praise_id"
+			javaType="ShopPraise">
+			<id column="praise_id" property="praiseid" />
+			<result column="praise_count" property="praisecount" />
+			<result column="click_count" property="clickcount" />
+			<result column="praise_radix_count" property="praiseradixcount" />
+			<result column="click_radix_count" property="clickradixcount" />
+			<result column="odds_shop_id" property="oddsshopid" />
+		</association>
+		<association property="gprs" column="city_id" javaType="Gprs">
+			<id column="city_id" property="cityid" />
+			<result column="city_no" property="cityno" />
+			<result column="city_name" property="cityname" />
+
+			<result column="shop_ring_id" property="shopringid" />
+			<result column="city_on" property="cityon" />
+			<result column="shop_ring_name" property="shopringname" />
+			<result column="shop_ring_no" property="shopringno" />
+			<result column="shop_ring_describe" property="shopringdescribe" />
+			<result column="shop_ring_city" property="shopringcity" />
+		</association>
+	</resultMap>
+
+	<resultMap type="Shop" id="shopResultMap">
+		<id column="odds_shop_id" property="oddsshopid" />
+		<result column="odds_shop_name" property="oddsshopname" />
+		<result column="odds_shop_address" property="oddsshopaddress" />
+		<result column="odds_shop_longitude" property="oddsshoplongitude" />
+		<result column="odds_shop_latitude" property="oddsshoplatitude" />
+		<result column="odds_shop_phone" property="oddsshopphone" />
+		<result column="odds_shop_privilege" property="oddsshopprivilege" />
+		<result column="odds_shop_city" property="oddsshopcity" />
+		<result column="odds_shop_order" property="oddsshoporder" />
+		<result column="odds_shop_ring" property="oddsshopring" />
+		<result column="odds_shop_privilege_act" property="oddsshopprivilegeact" />
+		<result column="odds_shop_status" property="oddsshopstatus" />
+		<result column="odds_shop_type_id" property="oddsshoptypeid" />
+		<result column="odds_shop_type" property="oddsshoptype" />
+		<result column="odds_shop_picture_url" property="oddsshoppictureurl" />
+		<result column="odds_shop_picture_name" property="oddsshoppicturename" />
+		<result column="odds_shop_consumption" property="oddsshopconsumption" />
+		<result column="odds_shop_subbranch_name" property="oddsshopsubbranchname" />
+		<result column="odds_shop_favorable_info" property="oddsshopfavorableinfo" />
+		<result column="odds_shop_end_time" property="oddsshopendtime" />
+		<result column="odds_shop_begin_time" property="oddsshopbegintime" />
+		<result column="odds_shop_public_time" property="oddsshoppublictime" />
+		<result column="odds_shop_brief_introduction" property="oddsshopbriefintroduction" />
+		<association property="gprs" column="city_id" javaType="Gprs">
+			<id column="city_id" property="cityid" />
+			<result column="city_no" property="cityno" />
+			<result column="city_name" property="cityname" />
+			<result column="shop_ring_id" property="shopringid" />
+			<result column="city_on" property="cityon" />
+			<result column="shop_ring_name" property="shopringname" />
+			<result column="shop_ring_no" property="shopringno" />
+			<result column="shop_ring_describe" property="shopringdescribe" />
+			<result column="shop_ring_city" property="shopringcity" />
+		</association>
+	</resultMap>
+	<!-- 信息查询 -->
+	<select id="findAllShopPageList" resultType="Shop" resultMap="shopAndRoleResultMap">
+		select u.odds_shop_id,u.odds_shop_name,u.odds_shop_address,
+		u.odds_shop_longitude,u.odds_shop_latitude,u.odds_shop_phone,
+		u.odds_shop_privilege,u.odds_shop_order,u.odds_shop_privilege_act,
+		u.odds_shop_status,u.odds_shop_picture_url,u.odds_shop_picture_name,
+		r.odds_shop_type,c.click_radix_count,u.odds_shop_consumption,
+		u.odds_shop_subbranch_name,u.odds_shop_favorable_info,u.odds_shop_end_time,u.odds_shop_begin_time,u.odds_shop_public_time,
+		u.odds_shop_brief_introduction,y.city_name,k.shop_ring_name
+		from bank_odds_shop u left join bank_odds_shop_type r on
+		u.odds_shop_type_id=r.odds_shop_type_id
+		left join bank_city_gps y on y.city_no=u.odds_shop_city
+		left join bank_city_shop_ring k on k.shop_ring_no=u.odds_shop_ring
+		left join bank_odds_shop_praise c on u.odds_shop_id=c.odds_shop_id
+		where 1=1
+		<if test="oddsshopname!=null and oddsshopname!=''">
+			and u.odds_shop_name like "%"#{oddsshopname}"%"
+		</if>
+	</select>
+
+
+
+	<select id="listAllshop" resultMap="shopAndRoleResultMap">
+		select u.odds_shop_id,u.odds_shop_name,u.odds_shop_address,
+		u.odds_shop_longitude,u.odds_shop_latitude,u.odds_shop_phone,
+		u.odds_shop_privilege,
+		u.odds_shop_order,u.odds_shop_privilege_act,u.odds_shop_status,u.odds_shop_picture_url,u.odds_shop_picture_name,
+		r.odds_shop_type,p.photo_url,c.click_radix_count,u.odds_shop_consumption,u.odds_shop_subbranch_name,
+		u.odds_shop_favorable_info,u.odds_shop_end_time,u.odds_shop_begin_time,u.odds_shop_public_time,u.odds_shop_brief_introduction,y.city_name,k.shop_ring_name
+		from bank_odds_shop u left join bank_odds_shop_type r on
+		u.odds_shop_type_id=r.odds_shop_type_id left join bank_city_gps y on
+		y.city_no=u.odds_shop_city
+		left join bank_city_shop_ring k on k.shop_ring_no=u.odds_shop_ring
+		left join bank_odds_shop_photo_album p on u.odds_shop_id=p.odds_shop_id
+		left join bank_odds_shop_praise c on u.odds_shop_id=c.odds_shop_id
+		where p.photo_flag=2 ORDER BY u.odds_shop_order ASC
+	</select>
+
+
+	<select id="getCountByName" parameterType="Shop" resultType="int">
+		select count(odds_shop_id) from bank_odds_shop where
+		odds_shop_order=#{oddsshoporder,,jdbcType=NUMERIC}
+	</select>
+
+	<insert id="insertShop" parameterType="Shop" useGeneratedKeys="true" keyProperty="oddsshopid">
+		insert into bank_odds_shop
+		(odds_shop_id,odds_shop_name,odds_shop_address,
+		odds_shop_longitude,odds_shop_latitude,odds_shop_phone,odds_shop_privilege,
+		odds_shop_city,odds_shop_order,odds_shop_ring,odds_shop_privilege_act,odds_shop_status,
+		odds_shop_picture_url,odds_shop_picture_name,odds_shop_consumption,odds_shop_subbranch_name,odds_shop_favorable_info,odds_shop_end_time,odds_shop_begin_time,odds_shop_public_time,
+		odds_shop_brief_introduction,odds_shop_type_id)
+		values( 
+		#{oddsshopid},
+		#{oddsshopname,jdbcType=VARCHAR},#{oddsshopaddress,jdbcType=VARCHAR},#{oddsshoplongitude,jdbcType=NUMERIC},#{oddsshoplatitude,jdbcType=NUMERIC},
+		#{oddsshopphone,jdbcType=VARCHAR},#{oddsshopprivilege,jdbcType=VARCHAR},
+		#{oddsshopcity,jdbcType=VARCHAR},#{oddsshoporder,jdbcType=NUMERIC},
+		#{oddsshopring,jdbcType=VARCHAR},#{oddsshopprivilegeact,jdbcType=VARCHAR},
+		#{oddsshopstatus,jdbcType=NUMERIC},#{oddsshoppictureurl,jdbcType=VARCHAR},#{oddsshoppicturename,jdbcType=VARCHAR},#{oddsshopconsumption,jdbcType=VARCHAR},
+		#{oddsshopsubbranchname,jdbcType=VARCHAR},#{oddsshopfavorableinfo,jdbcType=VARCHAR},#{oddsshopendtime,jdbcType=VARCHAR},#{oddsshopbegintime},#{oddsshoppublictime},
+		#{oddsshopbriefintroduction,jdbcType=VARCHAR},#{oddsshoptypeid,jdbcType=VARCHAR})
+	</insert>
+
+
+
+	<update id="updateShop" parameterType="Shop">
+		update bank_odds_shop set
+		ODDS_SHOP_PHONE=#{oddsshopphone,jdbcType=VARCHAR},ODDS_SHOP_PRIVILEGE=#{oddsshopprivilege,jdbcType=VARCHAR},
+		ODDS_SHOP_ORDER=#{oddsshoporder,jdbcType=NUMERIC},ODDS_SHOP_RING=#{oddsshopring},ODDS_SHOP_PRIVILEGE_ACT=#{oddsshopprivilegeact,jdbcType=VARCHAR},
+		ODDS_SHOP_STATUS=#{oddsshopstatus},ODDS_SHOP_PICTURE_URL=#{oddsshoppictureurl},
+		ODDS_SHOP_PICTURE_NAME=#{oddsshoppicturename},ODDS_SHOP_CONSUMPTION=#{oddsshopconsumption},
+		ODDS_SHOP_SUBBRANCH_NAME=#{oddsshopsubbranchname},ODDS_SHOP_FAVORABLE_INFO=#{oddsshopfavorableinfo,jdbcType=VARCHAR},
+		ODDS_SHOP_END_TIME=#{oddsshopendtime},ODDS_SHOP_BRIEF_INTRODUCTION=#{oddsshopbriefintroduction},
+		odds_shop_begin_time=#{oddsshopbegintime},odds_shop_public_time=#{oddsshoppublictime},
+		odds_shop_type_id=#{oddsshoptypeid}
+		where odds_shop_id=#{oddsshopid}
+	</update>
+
+
+	<update id="updateShops" parameterType="Shop">
+		update
+		bank_odds_shop set
+		ODDS_SHOP_PHONE=#{oddsshopphone},ODDS_SHOP_PRIVILEGE=#{oddsshopprivilege},
+		ODDS_SHOP_ORDER=#{oddsshoporder,jdbcType=NUMERIC},ODDS_SHOP_RING=#{oddsshopring},ODDS_SHOP_PRIVILEGE_ACT=#{oddsshopprivilegeact,jdbcType=VARCHAR},
+		ODDS_SHOP_STATUS=#{oddsshopstatus},ODDS_SHOP_CONSUMPTION=#{oddsshopconsumption},
+		ODDS_SHOP_SUBBRANCH_NAME=#{oddsshopsubbranchname},ODDS_SHOP_FAVORABLE_INFO=#{oddsshopfavorableinfo,jdbcType=VARCHAR},
+		ODDS_SHOP_END_TIME=#{oddsshopendtime},ODDS_SHOP_BRIEF_INTRODUCTION=#{oddsshopbriefintroduction},odds_shop_type_id=#{oddsshoptypeid},
+		odds_shop_begin_time=#{oddsshopbegintime},odds_shop_public_time=#{oddsshoppublictime}
+		where odds_shop_id=#{oddsshopid}
+	</update>
+
+
+	<select id="getShopById" parameterType="String" resultMap="shopResultMap">
+		select
+		u.odds_shop_id,u.odds_shop_name,u.odds_shop_address,u.odds_shop_longitude,u.odds_shop_latitude,u.odds_shop_phone,u.odds_shop_privilege,u.odds_shop_order,
+		u.odds_shop_ring,u.odds_shop_privilege_act,u.odds_shop_status,u.odds_shop_privilege_act,u.odds_shop_status,u.odds_shop_picture_url,u.odds_shop_picture_name,
+		u.odds_shop_consumption,u.odds_shop_subbranch_name,u.odds_shop_favorable_info,u.odds_shop_begin_time,u.odds_shop_public_time,
+		u.odds_shop_end_time,u.odds_shop_type_id,u.odds_shop_city,u.odds_shop_brief_introduction
+		from bank_odds_shop u
+		where u.odds_shop_id=#{oddsshopid,jdbcType=VARCHAR}
+	</select>
+
+
+	<delete id="deleteShop" parameterType="String">
+		delete from bank_odds_shop
+		where odds_shop_id=#{oddsshopid,jdbcType=VARCHAR}
+	</delete>
+
+	 
+	<select id="odddsShopbyId" resultMap="shopAndRoleResultMap"
+		parameterType="String">
+		select * from bank_odds_shop where
+		odds_shop_id=#{oddsshopid}
+	</select>
+	<select id="oddsshopId" resultType="String" parameterType="String">
+		select odds_shop_id from bank_odds_shop where
+		odds_shop_id=#{oddsshopid}
+	</select>
+</mapper>
+
+
+
+

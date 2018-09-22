@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.MenuMapper">
+
+	<resultMap type="Menu" id="menuResultMap">
+		<id column="menu_id" property="menuId"/>
+		<result column="menu_name" property="menuName"/>
+		<result column="menu_url" property="menuUrl"/>
+		<result column="parent_id" property="parentId"/>
+	</resultMap>
+ 
+	<select id="listPageAllParentMenu" parameterType="Menu"  resultMap="menuResultMap">
+		select u.menu_id,u.menu_name,u.menu_url,u.parent_id from bank_menu_manage u where 1=1
+		<if test="menuName!=null and menuName!=''">
+			and u.menu_name like concat('%',#{menuName},'%') 
+		</if>
+	</select>
+	
+	
+	<select id="listAllParentMenus" parameterType="Menu"  resultMap="menuResultMap">
+	   SELECT * FROM bank_menu_manage e WHERE parent_id is null
+		<if test="menuName!=null and menuName!=''">
+			and menu_name like concat('%',#{menuName},'%')
+		</if>
+		 
+	</select>
+		 
+	<select id="listSubMenuByParentId" parameterType="Integer" resultMap="menuResultMap">
+		select * from bank_menu_manage where parent_id=#{parentId,JdbcType=Integer}
+	</select>
+	
+	<select id="getMenuById" parameterType="Integer" resultMap="menuResultMap">
+		select * from bank_menu_manage where menu_id=#{menuId}
+	</select>
+	
+	<select id="listAllSubMenu" resultMap="menuResultMap">
+		select * from bank_menu_manage where parent_id is  null
+	</select>
+	
+	
+
+	 <insert id="insertMenu" parameterType="Menu"   keyProperty="menuId">
+		insert into bank_menu_manage (menu_name,menu_url,parent_id) values (#{menuName,JdbcType=VARCHAR},#{menuUrl,JdbcType=VARCHAR},#{parentId})
+	</insert>
+	
+	
+	<insert id="insertMenumanage" parameterType="Menu"   keyProperty="menuId">
+		insert into bank_menu_manage (menu_name) values (#{menuName,JdbcType=VARCHAR})
+	</insert>
+	
+	
+	
+	<update id="updateMenu" parameterType="Menu">
+		update bank_menu_manage set 
+		MENU_NAME=#{menuName,JdbcType=VARCHAR},
+		 MENU_URL=#{menuUrl,JdbcType=VARCHAR}
+		where MENU_ID=#{menuId,JdbcType=NUMBER}
+	</update>
+	
+	
+	
+	
+	<delete id="deleteMenuById" parameterType="Integer">
+		delete from bank_menu_manage where menu_id=#{menuId,JdbcType=NUMBER} or parent_id=#{menuId,JdbcType=NUMBER}
+	</delete>
+	
+	
+	
+</mapper>

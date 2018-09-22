@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.ExpressMapper">
+<resultMap type="com.app.entity.Express" id="ExpressresultMap">
+		<id column="express_service_name_id"  property="expressServiceNameId"></id>
+		<result column="express_service_name"  property="expressServiceName"></result>
+		<result column="express_service_address"  property="expressServiceAddress"></result>
+		<result column="is_use"  property="isUse"></result>
+	</resultMap>
+	<sql id="expressColumns">express_service_name,express_service_address,is_use</sql>
+	<select id="listPageExpress" parameterType ="com.app.entity.Express" resultMap="ExpressresultMap">
+	    SELECT e.* FROM bank_express e WHERE 1=1 
+		<if test="expressServiceName!=null and expressServiceName!=''">
+			and express_service_name LIKE '%${expressServiceName}%'
+		</if>
+		ORDER BY express_service_name_id DESC 
+	</select>
+	 
+	<insert id="insertExpress" parameterType="com.app.entity.Express" useGeneratedKeys="false" keyProperty="expressServiceNameId">
+		insert into bank_express (<include refid="expressColumns"/>)
+	 	values (#{expressServiceName},#{expressServiceAddress},#{isUse})
+	</insert>
+	<delete id="deleteExpress" parameterType="int">
+		delete from bank_express where express_service_name_id=#{expressServiceNameId}
+	</delete>
+	<select id="getExpressById" parameterType="int" resultMap="ExpressresultMap">
+		SELECT * FROM bank_express WHERE express_service_name_id=#{expressServiceNameId}
+	</select>
+	
+	<update id="updatexpressInfo" parameterType="com.app.entity.Express">
+		update bank_express set
+		express_service_name=#{expressServiceName},
+		express_service_address=#{expressServiceAddress},
+		is_use=#{isUse}
+		where  express_service_name_id = #{expressServiceNameId}
+	</update>
+</mapper>

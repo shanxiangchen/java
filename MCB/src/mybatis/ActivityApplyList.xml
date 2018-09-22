@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.app.mapper.ActivityApplyListMapper">
+		 <resultMap type="ActivityApplyList" id="AativityApplyListResultMap">
+			<id column="ACTIVITY_APPLY_LIST_ID" property="activityApplyListId"/>
+			<result column="ACTIVITY_ID" property="activityId"/>
+			<result column="ACTIVITY_APPLY_LIST_PHONE" property="activityApplyListPhone"/>
+			<result column="ACTIVITY_TITLE" property="activityTitle"/>
+			<result column="ACTIVITY_START_DATE" property="activityStartDate"/>
+			<result column="ACTIVITY_END_DATE" property="activityEndDate"/>
+			
+			<association property="marketActivity" column="ACTIVITY_ID" javaType="MarketActivity">
+			<id column="ACTIVITY_ID" property="activityId"/>
+			<result column="ACTIVITY_TITLE" property="activityTitle"/>
+			<result column="ACTIVITY_START_DATE" property="activityStartDate"/>
+			<result column="ACTIVITY_END_DATE" property="activityEndDate"/>
+		</association>
+		</resultMap>
+		 <select id="listActivityApplyPageList"  parameterType="ActivityApplyList" resultMap="AativityApplyListResultMap">
+	        SELECT d.*
+			from ( select baa.activity_apply_list_id,
+	       baa.activity_apply_list_phone,ba.activity_title,ba.activity_start_date,ba.activity_end_date
+	       from bank_market_activity ba  join
+	       bank_activity_apply_list baa on baa.activity_id= ba.activity_id
+			)d  WHERE 1 = 1
+			 <if test="activityTitle!=null and activityTitle!=''">
+				 and d.activity_title like concat('%',#{activityTitle},'%')
+			</if> 
+			
+			 <if test="activityStartDate!=null and activityStartDate!=''">
+				  and d.activity_start_date &gt;= #{activityStartDate}
+			</if>
+			 
+			 <if test="activityEndDate!=null and activityEndDate!=''">
+				 and d.activity_end_date &lt;= #{activityEndDate}
+			</if> 
+			order by d.activity_apply_list_id
+		</select>
+		 
+		 <select id="listActivityApplyListExecel" resultMap="AativityApplyListResultMap" parameterType="ActivityApplyList">
+			select baa.activity_apply_list_id,
+	       baa.activity_apply_list_phone,ba.activity_title,ba.activity_start_date,ba.activity_end_date
+	       from bank_market_activity ba  join
+	       bank_activity_apply_list baa on baa.activity_id= ba.activity_id 
+	       where 1=1
+			<if test="activityTitle!=null and activityTitle!=''">
+				and ba.activity_title like concat('%',#{activityTitle},'%')
+			</if>
+			<if test="activityStartDate!=null and activityStartDate!=''">
+				 or ba.activity_start_date  &gt;= #{activityStartDate}
+			</if> 
+			
+			 <if test="activityEndDate!=null and activityEndDate!=''">
+				 and ba.activity_end_date  &lt;= #{activityEndDate}
+			</if> 
+			<!--  ORDER BY baa.activity_apply_list_id desc -->
+		</select>
+	</mapper>

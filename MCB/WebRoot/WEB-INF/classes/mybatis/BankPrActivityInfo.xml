@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.BankPrActivityInfoMapper">
+
+	<select id="prActivityInfoPageList" resultType="com.app.entity.BankPrActivityInfo"
+		parameterType="com.app.entity.BankPrActivityInfo">
+		select t.activity_info_id as activityInfoId ,
+		a.rights_type_name as rightsTypeCode,
+		t.activity_code as activityCode,
+		t.activity_name as activityName,
+		t.activity_self_used as activitySelfUsed,
+		t.activity_heel_used as activityHeelUsed,
+		t.activity_order as activityOrder,
+		t.activity_content as activityContent,
+		t.activity_order_name as activityOrderName,
+		t.activity_show as activitySow
+		from bank_pr_activity_info t
+		left join bank_pr_rights_type a
+		on
+		t.rights_type_code =a.rights_type_code
+		<if test="activityName!=null and activityName!=''">
+			where t.activity_name like "%"#{activityName}"%"
+		</if>
+	</select>
+	<insert id="savePrActivityInfo" parameterType="com.app.entity.BankPrActivityInfo">
+
+		insert into
+		bank_pr_activity_info(
+		RIGHTS_TYPE_CODE,
+		ACTIVITY_CONTENT,
+		ACTIVITY_CODE,
+		ACTIVITY_NAME,
+		ACTIVITY_SELF_USED,
+		ACTIVITY_HEEL_USED,
+		ACTIVITY_ORDER,
+		ACTIVITY_ORDER_NAME,
+		ACTIVITY_SHOW
+		)
+		values(
+		#{rightsTypeCode,jdbcType=VARCHAR},
+		#{activityContent,jdbcType=VARCHAR},
+		#{activityCode,jdbcType=VARCHAR},
+		#{activityName,jdbcType=VARCHAR},
+		#{activitySelfUsed,jdbcType=VARCHAR},
+		#{activityHeelUsed,jdbcType=VARCHAR},
+		#{activityOrder,jdbcType=VARCHAR},
+		#{activityOrderName,jdbcType=VARCHAR},
+		#{activitySow,jdbcType=VARCHAR}
+		)
+
+	</insert>
+	<delete id='deletePrActivityInfo'>
+		delete from bank_pr_activity_info  
+		<where>
+			ACTIVITY_INFO_ID in
+			<foreach collection="array" item="item" index="index" open="("
+				separator="," close=")">#{item}</foreach>
+		</where>
+
+	</delete>
+	<select id="prActivityInfoListById" resultType="com.app.entity.BankPrActivityInfo"
+		parameterType="String">
+		select
+		f.activity_info_id as
+		activityInfoId,
+		f.rights_type_code as
+		rightsTypeCode,
+		f.activity_content as
+		activityContent,
+		f.activity_code
+		as activityCode,
+		f.activity_name as
+		activityName,
+		f.activity_self_used
+		as activitySelfUsed,
+		f.activity_heel_used as
+		activityHeelUsed,
+		f.activity_order as
+		activityOrder,
+		f.activity_order_name as
+		activityOrderName,
+		f.activity_show as activitySow
+		from
+		bank_pr_activity_info f where
+		f.activity_info_id=#{activityInfoId,jdbcType=VARCHAR}
+	</select>
+	<update id="updatePrActivityInfo" parameterType="com.app.entity.BankPrActivityInfo">
+		update
+		bank_pr_activity_info set
+		RIGHTS_TYPE_CODE=#{rightsTypeCode,jdbcType=VARCHAR},
+		ACTIVITY_CONTENT=#{activityContent,jdbcType=VARCHAR},
+		<!-- ACTIVITY_CODE=#{activityCode,jdbcType=VARCHAR}, -->
+		ACTIVITY_NAME=#{activityName,jdbcType=VARCHAR},
+		ACTIVITY_SELF_USED=#{activitySelfUsed,jdbcType=VARCHAR},
+		ACTIVITY_HEEL_USED=#{activityHeelUsed,jdbcType=VARCHAR},
+		ACTIVITY_ORDER=#{activityOrder,jdbcType=VARCHAR},
+		ACTIVITY_ORDER_NAME=#{activityOrderName,jdbcType=VARCHAR},
+		ACTIVITY_SHOW=#{activitySow,jdbcType=VARCHAR}
+		where
+		ACTIVITY_INFO_ID=#{activityInfoId,jdbcType=VARCHAR}
+
+
+	</update>
+	<update id="updateBankPrHolidayToNo" parameterType="String">
+		update
+		bank_lunar_solar_calendar set
+		calendar_is_holiday='N'
+		WHERE
+		calendar_solar like "%"#{year}"%"
+	</update>
+	<update id="saveBankPrHoliday" parameterType="com.app.entity.BankPrHoliday">
+		update
+		bank_lunar_solar_calendar set
+		calendar_is_holiday='Y'
+		WHERE
+		calendar_solar between #{ydStartDate,jdbcType=VARCHAR} and
+		#{ydEndDate,jdbcType=VARCHAR} or
+		calendar_solar between
+		#{cjStartDate,jdbcType=VARCHAR} and
+		#{cjEndDate,jdbcType=VARCHAR} or
+		calendar_solar between #{qmStartDate,jdbcType=VARCHAR} and
+		#{qmEndDate,jdbcType=VARCHAR} or
+		calendar_solar between
+		#{wyStartDate,jdbcType=VARCHAR} and
+		#{wyEndDate,jdbcType=VARCHAR} or
+		calendar_solar between #{dwStartDate,jdbcType=VARCHAR} and
+		#{dwEndDate,jdbcType=VARCHAR} or
+		calendar_solar between
+		#{zqStartDate,jdbcType=VARCHAR} and
+		#{zqEndDate,jdbcType=VARCHAR} or
+		calendar_solar between #{gqStartDate,jdbcType=VARCHAR} and
+		#{gqEndDate,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getBankPrActivityInfoNum" parameterType="com.app.entity.BankPrActivityInfo" resultType="int">
+		select count(1) from bank_pr_activity_info where activity_code = #{activityCode}
+	</select>
+	
+</mapper>

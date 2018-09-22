@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.BoundMapper">
+<resultMap type="com.app.entity.Bound" id="BoundresultMap">
+		<id column="card_id" property="cardId"></id>
+		<result column="card_no" property="cardNo"></result>
+		<result column="card_type" property="cardType"></result>
+		<result column="user_phone" property="userPhone"></result>
+		<result column="IS_DEFAULT_CARD" property="isDefaultCard"></result>
+		<result column="user_id" property="userId"></result>
+	</resultMap>
+	<resultMap type="com.app.entity.BankUser" id="BankUserResultMap">
+		<id column="USER_ID" property="userId"></id>
+		<result column="USER_PHONE" property="userPhone"></result>
+	</resultMap>
+	
+	<select id="listPageBound" parameterType="com.app.entity.Bound"  resultMap="BoundresultMap">
+	    SELECT bubc.card_id, bubc.card_no, bubc.card_type, bu.user_phone,bubc.IS_DEFAULT_CARD
+          FROM bank_user_bound_card bubc
+          LEFT JOIN bank_user bu
+            ON bubc.user_id = bu.user_id where 1=1 
+         <if test="userPhone!=null and userPhone!=''">
+			and bu.user_phone like '%${userPhone}%'
+	     </if>
+	     <if test="cardNo!=null and cardNo!=''">
+			and bubc.card_no like '%${cardNo}%'
+	     </if>
+	     ORDER BY card_id DESC
+
+	</select> 
+	 
+	<select id="getBoundCount" parameterType="String" resultType="int">
+		          SELECT COUNT(1)
+                  FROM (SELECT bubc.card_id,
+                         bubc.card_no,
+                         bubc.card_type,
+                         bu.user_phone
+                    FROM bank_user_bound_card bubc
+                    LEFT JOIN bank_user bu
+                      ON bubc.user_id = bu.user_id where 1 = 1 
+							and bu.user_phone =#{userPhone}
+                      ) t
+		</select>
+	<delete id="deletebound" parameterType="int">
+		delete from bank_user_bound_card where card_id=#{cardId}
+	</delete>
+	 
+	<select id="boundGetByid" parameterType="int" resultMap="BoundresultMap">
+		SELECT bubc.card_id,bubc.user_id,bubc.card_no, bubc.card_type, bu.user_phone
+	          FROM bank_user_bound_card bubc
+	          LEFT JOIN bank_user bu
+	            ON bubc.user_id = bu.user_id where 1=1 and bubc.card_id=#{cardId}
+	</select>
+	<update id="editBound" parameterType="com.app.mapper.BoundMapper" >
+		 update bank_user set user_phone=#{userPhone} where  user_id=#{userId}
+	</update>
+	<!-- 判断是否唯一 -->
+	<select id="getCountNewNo" parameterType="com.app.entity.BankUser" resultType="Integer">
+		select count(USER_ID) from bank_user where USER_PHONE=#{userPhone}
+	</select>
+		<select id="boundDelSelect" resultType="String" parameterType="int" >
+		SELECT distinct bubc.IS_DEFAULT_CARD
+	          FROM bank_user_bound_card bubc
+	          LEFT JOIN bank_user bu
+	            ON bubc.user_id = bu.user_id where bubc.card_id=#{cardId}
+	</select>
+</mapper>

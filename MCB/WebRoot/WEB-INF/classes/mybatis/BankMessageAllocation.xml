@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.BankMessageAllocationMapper">
+
+	<resultMap type="com.app.entity.BankMessageAllocation" id="bankMessageSAllocationResultMap">
+		<id column="message_id" property="messageId"></id>
+		<result column="message_code" property="messageCode"></result>
+		<result column="allocation_name" property="allocationName"></result>
+		<result column="times" property="times"></result>
+		<result column="interval_time" property="intervalTime"></result>
+	</resultMap>
+
+	<sql id="selectbankMessageAllocation">message_id,message_code,allocation_name,times,interval_time</sql>
+	
+	<select id="selectBankAllocationPageList" parameterType="bankMessageAllocation" resultMap="bankMessageSAllocationResultMap">
+		select 
+		<include refid="selectbankMessageAllocation"></include>
+		from bank_message_allocation where 1=1
+		<if test="messageCode != null and messageCode != ''">
+			and message_code = #{messageCode}
+		</if>
+		<if test="allocationName != null and allocationName != ''">
+			and allocation_name like concat('%',#{allocationName},'%')
+		</if>
+		order by message_id
+	</select>
+	
+	<select id="getBankAllocationNumById" parameterType="bankMessageAllocation" resultType="int">
+		select count(*) from bank_message_allocation where message_id = #{messageId}
+	</select>
+	
+	<select id="getBankAllocationNumByCode" parameterType="bankMessageAllocation" resultType="int">
+		select count(*) from bank_message_allocation where message_code = #{messageCode}
+	</select>
+	
+	<insert id="saveBankAllocation" parameterType="bankMessageAllocation">
+		insert into bank_message_allocation(<include refid="selectbankMessageAllocation"></include>)values
+		(null,#{messageCode},#{allocationName},#{times},#{intervalTime})
+	</insert>
+
+	<update id="updateBankAllocation" parameterType="bankMessageAllocation">
+		update bank_message_allocation set allocation_name = #{allocationName},times=#{times},interval_time=#{intervalTime}
+		where message_id = #{messageId}
+	</update>
+	
+	<select id="selectMessageALlocation" parameterType="bankMessageAllocation" resultMap="bankMessageSAllocationResultMap">
+		select <include refid="selectbankMessageAllocation"></include> from bank_message_allocation 
+		where message_id=#{messageId}
+	</select>
+	
+	<delete id="deleteMessageAllocaiton" parameterType="int">
+		delete from bank_message_allocation where message_id=#{bankMessageId}
+	</delete>
+	
+	<select id="selectMessageAllocationByCode" parameterType="String" resultMap="bankMessageSAllocationResultMap">
+		select * from bank_message_allocation where message_code = #{messageCode}
+	</select>
+	
+	<select id="selectMessageAllocationPageList" parameterType="BankMessageRecord" resultMap="bankMessageSAllocationResultMap">
+		SELECT DISTINCT a.message_code,a.allocation_name FROM bank_message_allocation a RIGHT JOIN bank_message_record r ON a.message_code exists
+		(SELECT r.message_code FROM bank_message_record r WHERE r.is_success=0 AND r.message_code NOT exists
+		(SELECT r.message_code FROM bank_message_record r WHERE r.is_success = 1 AND r.date like concat('%',DATE_FORMAT(#{date}, '%Y-%m-%d'),'%'))
+		AND r.date like concat('%',DATE_FORMAT(#{date}, '%Y-%m-%d'),'%')
+		<if test="messageCode!=null and messageCode !=''">
+			and r.message_code = #{messageCode}
+		</if>
+		GROUP BY r.message_code )
+		
+	</select>
+	
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.app.mapper.StagingTypeMapper">
+		<resultMap type="com.app.entity.StagingType" id="StagingTypeResultMap">
+			<id column="ID" property="id"></id>
+			<result column="STAG_CODE" property="stagCode"></result>
+			<result column="STAG_NAME" property="stagName"></result>
+		</resultMap>
+		<sql id="stagingTypeColumns">STAG_CODE,STAG_NAME</sql>
+		<select id="stagingTypePageList" parameterType="com.app.entity.StagingType" resultMap="StagingTypeResultMap">
+	        SELECT * FROM bank_staging_type b WHERE 1=1
+			<if test="stagName!=null and stagName!=''">
+			and STAG_NAME like concat('%',#{stagName},'%')
+			</if>
+		</select>
+		<select id="getCount" parameterType="int" resultType="int">
+			SELECT COUNT(1) FROM bank_staging_type where 1=1
+			<if test="stagName!=null and stagName!=''">
+			and STAG_NAME=#{stagName}
+			</if>
+		</select>
+		<!-- 判断是否唯一 -->
+			<select id="getCountNewNo" parameterType="com.app.entity.StagingType" resultType="Integer">
+				select count(ID) from bank_staging_type where STAG_CODE=#{stagCode}
+			</select>
+		<insert id="insertStagingType" parameterType="com.app.entity.StagingType" useGeneratedKeys="false" keyProperty="id">
+			insert into bank_staging_type (<include refid="stagingTypeColumns"/>)
+			values(#{stagCode},#{stagName})
+		</insert>
+		<select id="stagingTypeById" resultMap="StagingTypeResultMap" parameterType="int">
+			SELECT * FROM bank_staging_type WHERE ID=#{id}
+		</select>
+		<update id="stagingTypeEdit" parameterType="com.app.entity.StagingType">
+			update bank_staging_type set STAG_CODE=#{stagCode},STAG_NAME=#{stagName} where ID=#{id}
+		</update>
+		<delete id="stagingTypeDel" parameterType="int">
+			delete from bank_staging_type where ID=#{id}
+		</delete>
+	</mapper>

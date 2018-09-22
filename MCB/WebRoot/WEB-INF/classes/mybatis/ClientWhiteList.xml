@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.ClientWhiteListMapper">
+	<resultMap type="ClientWhiteList" id="clientWhiteListResultMap">
+		<id column="white_list_id" property="whiteListId" />
+		<result column="white_list_name" property="whiteListName" />
+		<result column="papers_type" property="papersType" />
+		<result column="papers_num" property="papersNum" />
+		<result column="activity_type" property="activityType" />
+		<result column="activity_no" property="activityNo" />
+		<result column="white_list_phone" property="whiteListphone" />
+		<result column="WHITE_LIST_TYPE" property="whiteListType" />
+	</resultMap>
+	
+	<select id="selectWhiteImportListPage" resultType="com.app.entity.ClientWhiteImport" >
+	       select 
+			a.white_import_id as whiteImportId,
+			a.white_import_oldname as whiteImportOldname,
+			a.white_import_newname as whiteImportNewname,
+			a.white_import_size as whiteImportSize,
+			a.white_import_date as whiteImportDate,
+			a.white_import_user as whiteImportUser,
+			a.white_import_status as whiteImportStatus,
+			a.WHITE_IMPORT_URL as whiteImportUrl,
+			a.LOG_INFO as loginfo
+			from 
+			bank_client_white_import a
+	        where 1=1 
+	        <if test="whiteImportUser!=null and whiteImportUser!=''">
+	           and  a.white_import_user like "%"#{whiteImportUser}"%" 
+           </if>
+           <if test="whiteImportOldname!=null and whiteImportOldname!=''">
+	           and  a.white_import_oldname like "%"#{whiteImportOldname}"%" 
+           </if>
+           <if test="whiteImportStatus!=null and whiteImportStatus!=''">
+	           and  a.white_import_status=#{whiteImportStatus}
+           </if>  
+	</select> 
+	  
+    <!-- 2. 展示白名单  -->
+	<insert id="insertbatchClientWhiteList" parameterType="java.util.List" keyProperty="whiteListId">
+		insert
+		into bank_client_white_list(white_list_id,white_list_name,
+		papers_type,papers_num,activity_type,activity_no,white_list_phone,
+		white_list_type,white_list_one,white_list_two)
+		 SELECT 
+            seq_bk_client_white_listt.nextval||(SELECT
+			to_char(sysdate,'YYYYMMDDHH24MISS') FROM DUAL),a.* from (
+		<foreach collection="list" item="item" index="index" separator="union">
+		  select 
+		    #{item.whiteListName} a, #{item.papersType} b,
+	  		#{item.papersNum} c, #{item.activityType} d,
+	  		#{item.activityNo} e, #{item.whiteListphone} f,
+	  		#{item.whiteListType} g, null h, null i
+	  	  FROM DUAL
+  		</foreach>
+		) a
+	</insert>
+	
+	<!-- 1 报名白名单  -->
+	<insert id="insertbatchApplyWhiteList" parameterType="java.util.List" keyProperty="whiteListId">
+		insert
+		into bank_apply_white_list(white_list_id,white_list_name,
+		papers_type,papers_num,activity_type,activity_no,white_list_phone,
+		white_list_type,white_list_one,white_list_two)
+		 SELECT 
+            seq_bk_apply_white_list.nextval||(SELECT
+			to_char(sysdate,'YYYYMMDDHH24MISS') FROM DUAL),a.* from (
+		<foreach collection="list" item="item" index="index" separator="union">
+		  select 
+		    #{item.whiteListName} a, #{item.papersType} b,
+	  		#{item.papersNum} c, #{item.activityType} d,
+	  		#{item.activityNo} e, #{item.whiteListphone} f,
+	  		#{item.whiteListType} g, null h, null i
+	  	  FROM DUAL
+  		</foreach>
+		) a
+	</insert>
+	
+	<!-- 3.达标白名单 -->
+	<insert id="insertbatchStandardWhiteList" parameterType="java.util.List" keyProperty="whiteListId">
+		insert
+		into bank_standard_white_list(white_list_id,white_list_name,
+		papers_type,papers_num,activity_type,activity_no,white_list_phone,
+		white_list_type,white_list_one,white_list_two)
+		 SELECT 
+             seq_bk_standard_white_list.nextval||(SELECT
+			to_char(sysdate,'YYYYMMDDHH24MISS') FROM DUAL),a.* from (
+		<foreach collection="list" item="item" index="index" separator="union">
+		  select 
+		    #{item.whiteListName} a, #{item.papersType} b,
+	  		#{item.papersNum} c, #{item.activityType} d,
+	  		#{item.activityNo} e, #{item.whiteListphone} f,
+	  		#{item.whiteListType} g, null h, null i
+	  	  FROM DUAL
+  		</foreach>
+		) a
+	</insert>
+	
+	<!--根据活动编号删除白名单记录  -->
+	<delete id="deleteAllClientWhiteList" parameterType="String">
+	  delete from bank_client_white_list where activity_no=#{activityNo}
+	</delete>
+	
+	<delete id="deleteAllApplyWhiteList" parameterType="String">
+	  delete from bank_apply_white_list where activity_no=#{activityNo}
+	</delete>
+	
+	<delete id="deleteAllStandardWhiteList" parameterType="String">
+	  delete from bank_standard_white_list  where activity_no=#{activityNo}
+	</delete>
+	
+	<!--查询白名单中已存在的活动  -->
+	<select id="selectApplyWhiteListOfActNo" resultType="int" parameterType="String">
+		<!-- select distinct t.activity_no from bank_apply_white_list t -->
+		select count(1) from bank_apply_white_list t where t.activity_no=#{activityNo}
+	</select>
+	
+	<!--查询白名单中已存在的活动  -->
+	<select id="selectClientWhiteListOfActNo" resultType="int" parameterType="String">
+		<!-- select distinct t.activity_no from bank_client_white_list t -->
+		select count(1) from bank_client_white_list t where t.activity_no=#{activityNo}
+	</select>
+	
+	<!--查询白名单中已存在的活动  -->
+	<select id="selectStandardWhiteListOfActNo" resultType="int" parameterType="String">
+		<!-- select distinct t.activity_no from bank_standard_white_list t -->
+		select count(1) from bank_standard_white_list t where t.activity_no=#{activityNo}
+	</select>
+	 
+	<select id="getDataSource" resultType="java.util.HashMap">
+	  select G.CONFIG_NAME name ,G.CONFIG_PASSWORD pwd,G.CONFIG_URL url from BANK_DATA_SOURCE_CONFIG G where G.CONFIG_ISOK='1'
+	</select>
+	
+	<!--批量删除信息  -->
+	<delete id="deleteWhiteImport">
+		delete from bank_client_white_import  
+		<where>
+			 white_import_id in
+			<foreach collection="array" item="item" index="index" open="("
+				separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	
+	<delete id="deleteWhiteImportById" parameterType="String">
+		delete from bank_client_white_import where white_import_id=#{whiteImportId}
+	</delete>
+	
+	<!--白名单文件信息 -->
+	<resultMap type="ClientWhiteImport" id="clientWhiteImportResultMap">
+		<id column="WHITE_IMPORT_ID" property="whiteImportId" />
+		<result column="WHITE_IMPORT_OLDNAME" property="whiteImportOldname" />
+		<result column="WHITE_IMPORT_NEWNAME" property="whiteImportNewname" />
+		<result column="WHITE_IMPORT_URL" property="whiteImportUrl" />
+		<result column="WHITE_IMPORT_SIZE" property="whiteImportSize" />
+		<result column="WHITE_IMPORT_DATE" property="whiteImportDate" />
+		<result column="WHITE_IMPORT_STATUS" property="whiteImportStatus" />
+		<result column="WHITE_IMPORT_USER" property="whiteImportUser"/>
+		<result column="WHITE_SAVE_NO" property="whiteSaveNo" />
+		<result column="WHITE_SAVE_NO" property="whiteSaveNo" />
+		<result column="LOG_INFO" property="loginfo" />
+	</resultMap>
+
+   <!--添加白名单信息  -->
+	<insert id="insertClientWhiteImport" parameterType="ClientWhiteImport" useGeneratedKeys="true"
+	keyProperty="whiteImportId">
+	insert into bank_client_white_import
+	(white_import_id,white_import_oldname
+	,white_import_newname,white_import_url,white_import_size
+	,white_import_date,white_import_status,white_import_user)
+	values(#{whiteImportId},#{whiteImportOldname},#{whiteImportNewname},#{whiteImportUrl},
+	#{whiteImportSize},#{whiteImportDate},#{whiteImportStatus},#{whiteImportUser})
+   </insert>
+   
+   <update id="updateClientWhiteImportStatus" parameterType="String">
+          update bank_client_white_import set white_import_status='2' where white_import_id=#{whiteImportId}
+   </update>
+   
+   <update id="updateClientWhiteImport" parameterType="ClientWhiteImport">
+   		update bank_client_white_import set white_import_status='2',
+   			<if test="whiteSaveNo !=null and whiteSaveNo!=''">
+   				white_save_no=#{whiteSaveNo}
+   			</if>
+   			<if test="loginfo !=null and loginfo!=''">
+   				log_info = #{loginfo}
+   			</if>
+   		 	where white_import_id=#{whiteImportId}
+   </update>
+
+  <!--  <select id="getSeqId" resultType="String">
+     select seq_bk_client_white_import.nextval ||
+         (SELECT to_char(sysdate, 'yyyymmddhh24ssmm') FROM DUAL)
+     from dual
+   </select> -->	
+   <!-- <select id="getSeqId" resultType="String">
+     select seq_bk_client_white_import.nextval ||
+         (SELECT to_char(sysdate, 'yyyymmddhh24ssmm') FROM DUAL)
+     from dual
+   </select>	 -->
+   <select id="selectWhiteClientNo" parameterType="ClientWhiteList" resultType="int">
+   		<if test="whiteListType==1">
+   		select count(white_list_id) from bank_apply_white_list where white_list_phone=#{whiteListphone} and activity_no=#{activityNo}
+   		</if>
+   		<if test="whiteListType==2">
+   		select count(white_list_id) from bank_client_white_list where white_list_phone=#{whiteListphone} and activity_no=#{activityNo}
+   		</if>
+   		<if test="whiteListType==3">
+   		select count(white_list_id) from bank_standard_white_list where white_list_phone=#{whiteListphone} and activity_no=#{activityNo}
+   		</if>
+   </select>
+   
+   <select id="selectClientWhiteImportById" parameterType="String" resultMap="clientWhiteImportResultMap">
+   		select white_import_id,white_save_no from bank_client_white_import where white_import_id=#{whiteImportId}
+   </select>
+	
+	<delete id="deleteClientWhiteList" parameterType="com.app.entity.ClientWhiteImport">
+		<if test="whiteSaveNo==1">
+			delete from bank_apply_white_list where white_import_id=#{whiteImportId}
+		</if>
+		<if test="whiteSaveNo==2">
+			delete from bank_client_white_list where white_import_id=#{whiteImportId}
+		</if>
+		<if test="whiteSaveNo==3">
+			delete from bank_standard_white_list where white_import_id=#{whiteImportId}
+		</if>
+	</delete>
+	
+	<select id="selectClientWhiteListByWhiteImport" parameterType="ClientWhiteList" resultType="int">
+		<if test="whiteListType==1">
+   		select count(white_list_id) from bank_apply_white_list where white_import_id=#{whiteImportId}
+   		</if>
+   		<if test="whiteListType==2">
+   		select count(white_list_id) from bank_client_white_list where white_import_id=#{whiteImportId}
+   		</if>
+   		<if test="whiteListType==3">
+   		select count(white_list_id) from bank_standard_white_list where white_import_id=#{whiteImportId}
+   		</if>
+	</select>
+	
+	<!-- <select id="sqlexecute" statementType="CALLABLE">
+		<![CDATA[{
+		call insertList(#{lineText,mode=IN,jdbcType=VARCHAR},#{flag,mode=OUT,jdbcType=VARCHAR})
+		}]]>
+	</select> -->
+	
+</mapper>

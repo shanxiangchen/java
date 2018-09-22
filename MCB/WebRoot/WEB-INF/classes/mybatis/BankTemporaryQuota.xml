@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.BankTemporaryQuotaMapper">
+		 
+	 <select id="temporaryQuotaPageList" resultType="BankTemporaryQuota" parameterType="BankTemporaryQuota">	
+	    select 
+		 t.quota_id as quotaId,
+		 t.apply_date as applyDate,
+		 t.apply_time as applyTime,
+		 t.card_no as cardNo,
+		 t.expect_amount as expectAmount,
+		 t.effective_date as effectiveDate,
+		 t.expiration_date as expirationDate,
+		 t.decision_result as decisionResult,
+		 t.adjustable_amount as adjustableAmount,
+		 i.content as usedTypeName
+		FROM bank_temporary_quiota t,bank_code_info i WHERE i.sort_no = t.used_type AND i.code_type_id = 'TEMPORARY_PURPOSES'
+		<if test="beginDate!=null and beginDate!=''">
+		 and t.apply_date &gt;= #{beginDate}
+		</if>
+		<if test="endDate!=null and endDate!=''">
+		 and t.apply_date &lt;= #{endDate}
+		</if>
+		 order by t.apply_date desc,t.apply_time desc
+	</select>
+	<select id="exportQuota" resultType="BankTemporaryQuota" parameterType="BankTemporaryQuota">
+	    select 
+		 t.quota_id as quotaId,
+		 t.apply_date as applyDate,
+		 t.apply_time as applyTime,
+		 t.card_no as cardNo,
+		 t.expect_amount as expectAmount,
+		 t.effective_date as effectiveDate,
+		 t.expiration_date as expirationDate,
+		 i.content as usedTypeName,
+		 t.decision_result as decisionResult,
+		 t.adjustable_amount as adjustableAmount
+		FROM bank_temporary_quiota t,bank_code_info i WHERE i.sort_no = t.used_type AND i.code_type_id = 'TEMPORARY_PURPOSES'
+		<if test="beginDate!=null and beginDate!='' and endDate!=null and endDate!=''">
+		 and t.apply_date between(#{beginDate}) and (#{endDate})
+		</if>
+		order by t.apply_date desc,t.apply_time desc
+	</select>
+	  
+	
+</mapper>

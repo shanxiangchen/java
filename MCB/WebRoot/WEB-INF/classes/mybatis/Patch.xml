@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.app.mapper.PatchMapper">
+		<resultMap type="com.app.entity.Patch" id="PatchResultMap">
+			<id column="PATCH_TYPE_ID" property="patchTypeId"></id>
+			<result column="PATCH_TYPE_CODE" property="patchTypeCode"></result>
+			<result column="PATCH_TYPE_NAME" property="patchTypeNmae"></result>
+			<result column="PATCH_PAGE_EXPLAIN" property="patchPageExplain"></result>
+			<result column="PATCH_PAGE_SHOW" property="patchPageShow"></result>
+			<result column="PATCH_RECORD_EXPLAIN" property="patchRecordExplain"></result>
+		</resultMap>
+		<sql id="pacthColumns">PATCH_TYPE_CODE,PATCH_TYPE_NAME,PATCH_PAGE_EXPLAIN,PATCH_PAGE_SHOW,PATCH_RECORD_EXPLAIN</sql>
+		<select id="patchPageList" resultMap="PatchResultMap" parameterType="com.app.entity.Patch">
+			SELECT b.* FROM bank_patch_type b WHERE 1=1
+			<if test="patchTypeCode!=null and patchTypeCode!=''">
+				and PATCH_TYPE_CODE=#{patchTypeCode}
+			</if>
+			ORDER BY PATCH_TYPE_ID DESC
+		</select>
+		<delete id="delPatch" parameterType="int">
+			delete from bank_patch_type where PATCH_TYPE_ID=#{patchTypeId}
+		</delete>
+	<insert id="insertPatch" parameterType="com.app.entity.Patch" useGeneratedKeys="false" keyProperty="patchTypeId">
+		insert  INTO  bank_patch_type  (<include refid="pacthColumns"/>) 
+		values (#{patchTypeCode},#{patchTypeNmae},
+		#{patchPageExplain},#{patchPageShow},#{patchRecordExplain})
+	</insert>
+		<!-- 判断是否唯一 -->
+	<select id="getCountNewNo" parameterType="com.app.entity.Patch" resultType="Integer">
+		select count(1) from bank_patch_type where PATCH_TYPE_CODE=#{patchTypeCode}
+	</select>
+	</mapper>

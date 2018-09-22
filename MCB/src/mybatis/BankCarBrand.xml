@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.BankCarBrandMapper">
+	<resultMap type="BankCarBrand" id="BankCarBrandResultMap">
+		<id column="BRAND_ID" property="brandId" />
+		<result column="BRAND_NAME" property="brandName" />
+		<result column="IMG_ADDRESS_URL" property="imgAddressUrl" />
+		<result column="IMG_NAME" property="imgName" />
+		<result column="BRAND_DETAILS_MB" property="brandDetailsMb" />
+		<result column="BRAND_DETAILS_PC" property="brandDetailsPc" />
+	</resultMap>
+
+	<select id="carBrandPageList" resultMap="BankCarBrandResultMap" 
+		parameterType="BankCarBrand">
+		select e.* from bank_car_brand e where brand_id is not null
+		<if test="brandName!=null and brandName!=''">
+			and brand_name like concat('%',#{brandName},'%')
+		</if>
+		<if test="imgAddressUrl!=null and imgAddressUrl!=''">
+			and img_address_url = #{imgAddressUrl}
+		</if>
+		ORDER BY brand_id
+	</select>
+	<delete id="deleteCarBrand" parameterType="String">
+		delete from
+		bank_car_brand where brand_id=#{brandId,jdbcType=VARCHAR}
+	</delete>
+    <select id="selectDetailsIdById" resultType="String" parameterType="String">
+        select t.details_id from bank_car_brand_details t where t.brand_id=#{brandId,jdbcType=VARCHAR}
+    </select>
+	<select id="getCarBrandbyid" resultMap="BankCarBrandResultMap"
+		parameterType="String">
+		select * from bank_car_brand where brand_id=#{brandId,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateCarBrand" parameterType="BankCarBrand">
+		update bank_car_brand set
+		brand_name=#{brandName,jdbcType=VARCHAR},
+		img_address_url=#{imgAddressUrl,jdbcType=VARCHAR},
+		<!-- brand_details_mb=#{brandDetailsMb,jdbcType=VARCHAR}, -->
+		brand_details_pc=#{brandDetailsPc,jdbcType=VARCHAR}
+		where brand_id=#{brandId,jdbcType=VARCHAR}
+	</update>
+	<select id="selectBankCarBrandNextVal" resultType="String">
+		select seq_bk_car_brand.Nextval ||(select
+		to_char(sysdate,'YYYYMMDDHH24MISS') from dual) from dual
+	</select>
+
+	<insert id="insertCarBrand" parameterType="BankCarBrand">
+		insert into bank_car_brand
+		(brand_id,brand_name,img_address_url,img_name,brand_details_mb,brand_details_pc)
+		values(#{brandId},#{brandName},#{imgAddressUrl},#{imgName},#{brandDetailsMb},#{brandDetailsPc})
+	</insert>
+
+	<select id="listCarBrandByIds" parameterType="int"
+		resultMap="BankCarBrandResultMap">
+		select * from bank_car_brand where brand_id = #{brandId}
+	</select>
+</mapper>

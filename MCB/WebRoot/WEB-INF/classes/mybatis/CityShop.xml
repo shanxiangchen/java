@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.CityShopMapper">
+	<resultMap type="com.app.entity.CityShop" id="CityShopResultMap">
+		<id     column="shop_ring_id"       property="shopRingId"/>
+		<result column="shop_ring_city"     property="shopRingCity"/>
+		<result column="city_no"            property="cityno"/>
+		<result column="shop_ring_name"     property="shopRingName"/>
+		<result column="shop_ring_no"       property="shopRingNo"/>
+		<result column="shop_ring_describe" property="shopRingDescribe"/>	
+	</resultMap>
+	<sql id="insertCityShop"></sql>
+	<select id="listPageCityShop" parameterType="com.app.entity.CityShop"  resultMap="CityShopResultMap">
+		SELECT * FROM bank_city_shop_ring e WHERE 1=1 
+		 <if test="shopRingName!=null and shopRingName!=''">
+			and shop_ring_name like '%${shopRingName}%'
+		</if>
+		ORDER BY shop_ring_id DESC
+	</select>
+	 
+	<select id="getCountByName" parameterType="com.app.entity.CityShop" resultType="Integer">
+		select count(shop_ring_id) from bank_city_shop_ring where shop_ring_no=#{shopRingNo}
+	</select>
+   <insert id="insertCityShop" parameterType="com.app.entity.CityShop">
+		insert into  bank_city_shop_ring (shop_ring_city,CITY_NO,
+		shop_ring_name,shop_ring_no,shop_ring_describe)
+		values(#{shopRingCity},#{cityno},
+		#{shopRingName},#{shopRingNo},#{shopRingDescribe})
+  </insert>
+   <delete id="detDeleteById" parameterType="int">
+   		delete  from bank_city_shop_ring where shop_ring_id=#{shopRingId}
+   	</delete>
+   	
+   	<select id="getCityShopById" parameterType="int" resultMap="CityShopResultMap">
+   		select * from bank_city_shop_ring where shop_ring_id=#{shopRingId}
+   	</select>
+   	
+   	 <select id="findAllCityShop" resultType="CityShop" resultMap="CityShopResultMap">
+		select * from bank_city_gps s left join bank_city_shop_ring c 
+		on s.city_no = c.city_no;
+	</select>
+   	 <select id="findAllshopring" resultType="CityShop" resultMap="CityShopResultMap">
+  		select c.shop_ring_name,c.shop_ring_no from  bank_city_shop_ring c
+	</select>
+   	 
+   	
+   	<update id="getupdateCityShop" parameterType="com.app.entity.CityShop">
+   	update bank_city_shop_ring set 
+   	shop_ring_city=#{shopRingCity},
+   	CITY_NO=#{cityno},
+   	shop_ring_name=#{shopRingName},
+   	shop_ring_no=#{shopRingNo},
+   	shop_ring_describe=#{shopRingDescribe}
+   	where shop_ring_id=#{shopRingId}
+   	</update>
+   	
+   	<select id="listCityShop" resultMap="CityShopResultMap" parameterType="String">
+  		select * from  bank_city_shop_ring where city_no=#{cityno}
+	</select>
+</mapper>

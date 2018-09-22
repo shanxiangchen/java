@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 注入 -->
+	<bean id="userService" class="com.app.service.impl.UserServiceImpl">
+		<property name="userMapper" ref="userMapper"/>
+	</bean>
+	<!-- 注入 -->
+	<bean id="roleService" class="com.app.service.impl.RoleServiceImpl">
+		<property name="roleMapper" ref="roleMapper"/>
+	</bean>
+	<!-- 注入 -->
+	<bean id="menuService" class="com.app.service.impl.MenuServiceImpl">
+		<property name="menuMapper" ref="menuMapper"/>
+	</bean>
+	<!-- 注入 -->
+	<bean id="shopService" class="com.app.service.impl.ShopServiceImpl">
+		<property name="shopMapper" ref="shopMapper"/>
+	</bean>
+	
+	<bean id="typeService" class="com.app.service.impl.TypeServiceImpl">
+		<property name="typeMapper" ref="typeMapper"/>
+	</bean>
+	
+	<bean id="shopPhotoService" class="com.app.service.impl.ShopPhotoServiceImpl">
+		<property name="shopPhotoMapper" ref="shopPhotoMapper"/>
+	</bean> 
+	
+	
+	<bean id="shopPraiseService" class="com.app.service.impl.ShopPraiseServiceImpl">
+		<property name="shopPraiseMapper" ref="shopPraiseMapper"/>
+	</bean> 
+	
+	
+	<bean id="gprsService" class="com.app.service.impl.GprsServiceImpl">
+		<property name="gprsMapper" ref="gprsMapper"/>
+	</bean> 
+	
+	<bean id="bankInnerLinkService" class="com.app.service.impl.BankInnerLinkServiceImpl">
+		<property name="bankInnerLinkMapper" ref="bankInnerLinkMapper"/>
+	</bean> 
+	
+	
+	<bean id="storeStagesService" class="com.app.service.impl.StoreStagesServiceImp">
+		<property name="storeStagesMapper" ref="storeStagesMapper"/>
+	</bean> 
+	
+	<!-- 快递注入  -->
+	<bean id="expressService" class="com.app.service.impl.ExpressServiceImpl">
+		<property name="expressMapper" ref="expressMapper"/>
+	</bean> 
+	<!-- 错误码注入  -->
+	<bean id="errorCodeService" class="com.app.service.impl.ErrorCodeServiceImpl">
+		<property name="errorCodeMapper" ref="errorCodeMapper"/>
+	</bean> 
+	<!--卡bin配置注入  -->
+	<bean id="manageBinService" class="com.app.service.impl.ManageBinServiceImpl">
+		<property name="manageBinMapper" ref="manageBinMapper"/>
+	</bean> 
+	<!--城市注入  -->
+	<bean id="bankCityService" class="com.app.service.impl.BankCityServiceImpl">
+		<property name="bankCtyMapper" ref="bankCtyMapper"/>
+	</bean>
+	<!-- 信息模板注入 -->
+	<bean id="TemplateService" class="com.app.service.impl.TemplateServiceImpl">
+		<property name="templateMapper" ref="templateMapper"/>
+	</bean>
+	<!--城市商圈注入  -->
+	<bean id="cityShopService" class="com.app.service.impl.CityShopServiceImpl">
+		<property name="cityShopMapper" ref="cityShopMapper"/>
+	</bean> 
+	<!-- 费率注入 -->
+	<bean id="rateService" class="com.app.service.impl.RateServiceImpl">
+		<property name="rateMapper" ref="rateMapper"/>
+	</bean>
+	
+	<bean id="ratesServerImpl" class="com.app.service.impl.RatesServerImpl">
+		<property name="ratesMapper" ref="ratesMapper"/>
+	</bean>
+	<!-- 分期类型注入 -->
+	<bean id="stagingTypeService" class="com.app.service.impl.StagingTypeServiceImpl">
+		<property name="stagingTypeMapper" ref="stagingTypeMapper"/>
+	</bean>
+	<!-- 状态注入 -->
+	<bean id="stateService" class="com.app.service.impl.StateServiceImpl">
+		<property name="stateMapper" ref="stateMapper"/>
+	</bean>
+	<!-- 分期计划注入 -->
+	<bean id="stagingPlanService" class="com.app.service.impl.StagingPlanServiceImpl">
+		<property name="stagingPlanMapper" ref="stagingPlanMapper"/>
+	</bean>
+	<!-- 分期城市注入 -->
+	<bean id="paymentCityService" class="com.app.service.impl.PaymentCityServiceImpl">
+		<property name="paymentCityMapper" ref="paymentCityMapper"/>
+	</bean>
+	<!-- 补件类型注入 -->
+	<bean id="patchService" class="com.app.service.impl.PatchServiceImpl">
+		<property name="patchMapper" ref="patchMapper"/>
+	</bean>
+	<!-- 权益包映射注入 -->
+	<bean id="rightsInterestsMappingService" class="com.app.service.impl.RightsInterestsMappingServiceImpl">
+		<property name="rightsPackagerkMappingMapper" ref="rightsPackagerkMappingMapper"/>
+	</bean>
+	<!-- 产品权益注入 -->
+	<bean id="productRightsInterestsService" class="com.app.service.impl.ProductRightsInterestsServiceImpl">
+		<property name="productRightsInterestsMapper" ref="productRightsInterestsMapper"/>
+	</bean>
+	<!-- 权益类型注入 -->
+ 	<bean id="rightsTypeService" class="com.app.service.impl.RightsTypeServiceImpl">
+		<property name="rigthsTypeMapper" ref="rigthsTypeMapper"/>
+	</bean>
+	<!-- 活动报名名单注入 -->
+	<bean id="activityApplyListService" class="com.app.service.impl.ActivityApplyListServiceImpl">
+		<property name="activityApplyListMapper" ref="activityApplyListMapper"/>
+	</bean>
+	<!-- 卡产品信息注入 -->
+	<bean id="cardInfoService" class="com.app.service.impl.CardInfoServiceImpl">
+		<property name="cardInfoMapper" ref="cardInfoMapper"/>
+	</bean>
+	<!-- 卡片申请状态注入 -->
+	<bean id="cardStateService" class="com.app.service.impl.CardStateServiceImpl">
+		<property name="cardStateMapper" ref="cardStateMapper"/>
+	</bean>
+	<!-- 消息模板注入 -->
+	<bean id="bankMessageTemplateService" class="com.app.service.impl.BankMessageTemplateServiceImpl">
+		<property name="bankMessageTemplateMapper" ref="bankMessageTemplateMapper"/>
+	</bean>
+	<!-- 积分注入 -->
+	<bean id="bankIntegralService" class="com.app.service.impl.BankIntegralServiceImpl">
+		<property name="bankIntegralMapper" ref="bankIntegralMapper"/>
+	</bean>
+	<!-- 客户端用户注入 -->
+	<bean id="bankUserServiceImpl" class="com.app.service.impl.BankUserServiceImpl">
+		<property name="bankUserMpper" ref="bankUserMpper"/>
+	</bean>
+	<!-- 汽车分期，经销商注入 -->
+	<bean id="bankCarStagingServiceImpl" class="com.app.service.impl.BankCarStagingServiceImpl">
+		<property name="bankCarStagingMapper" ref="bankCarStagingMapper"/>
+	</bean>
+	  
+	 <bean id="cWhitListService" class="com.app.service.impl.ClientWhiteListServiceImp">
+		<property name="clientWhiteListMapper" ref="clientWhiteListMapper"/>
+	</bean> 
+	<bean id="marketActivityService" class="com.app.service.impl.MarketActivityServiceImp">
+		<property name="marketActivityMapper" ref="marketActivityMapper"/>
+		<property name="activityAndCityGpsMapper" ref="activityAndCityGpsMapper"/>
+		<property name="marketPictureMapper" ref="marketPictureMapper"/>
+	</bean> 
+	<bean id="marketPictureService" class="com.app.service.impl.MarketPictureServiceImp">
+		<property name="marketPictureMapper" ref="marketPictureMapper"/>
+	</bean>
+	<bean id="marketActivityShopService" class="com.app.service.impl.MarketActivityShopServiceImp">
+		<property name="marketActivityMapper"  ref="marketActivityMapper"/>
+	</bean>
+	
+	<bean id="marketShopService" class="com.app.service.impl.MarketShopServiceImp">
+		<property name="marketShopMapper" ref="marketShopMapper"/>
+	</bean>
+	
+	<bean id="AdvertService" class="com.app.service.impl.AdvertServiceImp">
+		<property name="advertMapper" ref="advertMapper"/>
+	</bean>
+	<bean id="StoreStagesService" class="com.app.service.impl.StoreStagesServiceImp">
+		<property name="storeStagesMapper" ref="storeStagesMapper"/>
+	</bean>
+	 
+	<bean id="happyPoollService" class="com.app.service.impl.HappyPoollServiceImpl">
+		<property name="happyPoollMapper" ref="happyPoollMapper"/>
+	</bean>
+	<!-- webDav -->
+	<bean id="webDavService" class="com.app.service.impl.WebDavServiceImpl">
+		<property name="webDavMapper" ref="webDavMapper"/>
+	</bean>
+	
+	<!--导入静态页面 -->
+	<bean id="importHtmlService" class="com.app.service.impl.ImportHtmlServiceImpl">
+		<property name="importHtmlMapper" ref="importHtmlMapper"/>
+	</bean>
+		<!--客户信息管理-->
+	<bean id="inforMationService" class="com.app.service.impl.InforMationServiceImp">
+		<property name="inforMationMapper" ref="inforMationMapper"/> 
+	</bean> 
+
+	<!--代码类别 -->
+	<bean id="bankCodeTypeService" class="com.app.service.impl.BankCodeTypeServiceImpl">
+		<property name="bankCodeTypeMapper" ref="bankCodeTypeMapper"/>
+	</bean>
+	<!--代码信息-->
+	<bean id="bankCodeInfoService" class="com.app.service.impl.BankCodeInfoServiceImpl">
+		<property name="bankCodeInfoMapper" ref="bankCodeInfoMapper"/>
+	</bean>
+	<!-- 富文本编辑器 -->
+	<bean id="bankEditorSaveService" class="com.app.service.impl.BankEditorSaveServiceImpl">
+		<property name="bankEditorSaveMapper" ref="bankEditorSaveMapper"/>
+	</bean>
+	  
+	<!--分期快捷名单 -->
+	<bean id="StagingListService" class="com.app.service.impl.StagingListServiceImpl">
+		<property name="listMapper" ref="stagingListMapper"/> 
+	</bean> 
+	
+	
+		<!--汽车品牌-->
+	<bean id="BankCarBrandService" class="com.app.service.impl.BankCarBrandServiceImpl">
+		<property name="brandMapper" ref="bankCarBrandMapper"/> 
+	</bean> 
+	
+			<!--汽车品牌详情-->
+	 <bean id="BankCarBrandDetailsService" class="com.app.service.impl.BankCarBrandDetailsServiceImpl">
+		<property name="detailsMapper" ref="bankCarBrandDetailsMapper"/> 
+	</bean>  
+
+	<!-- 加办卡 -->
+	<bean id="cardAddInfoService" class="com.app.service.impl.CardAddInfoServiceImpl">
+		<property name="cardAddInfoMapper"  ref="cardAddInfoMapper"/>
+	</bean>
+	<!-- 加办卡 所属种类-->
+	<bean id="bankCardTypeService" class="com.app.service.impl.BankCardTypeServiceImpl">
+		<property name="bankCardTypeMapper"  ref="bankCardTypeMapper"/>
+	</bean>
+    <!-- 权益预约活动详情-->
+	<bean id="bankPrActivityInfoService" class="com.app.service.impl.BankPrActivityInfoServiceImpl">
+		<property name="bankPrActivityInfoMapper"  ref="bankPrActivityInfoMapper"/>
+	</bean>
+ 
+	<!-- 权益预约字段维护-->
+	<bean id="bankPrFiledTypeService" class="com.app.service.impl.BankPrFiledTypeServiceImpl">
+		<property name="bankPrFiledTypeMapper"  ref="bankPrFiledTypeMapper"/>
+	</bean>
+	<!-- 权益预约信息-->
+	<bean id="bankPrSaveService" class="com.app.service.impl.BankPrSaveServiceImpl">
+		<property name="bankPrSaveMapper"  ref="bankPrSaveMapper"/>
+	</bean>
+  
+	<!--额度类型-->
+	<bean id="BankLinesTypeService" class="com.app.service.impl.BankLinesTypeServiceImpl">
+		<property name="bankLinesTypeMapper"  ref="bankLinesTypeMapper"></property>
+	</bean>
+	<!--权益预约字段-->
+	<bean id="BankPrRightsFiledService" class="com.app.service.impl.BankPrRightsFiledServiceImpl">
+		<property name="bankPrRightsFiledMapper"  ref="bankPrRightsFiledMapper"></property>
+	</bean>
+	<!--乐活配置  -->
+	<bean id="BankLohasAllocationService" class="com.app.service.impl.BankLohasAllocationServiceImpl">
+		<property name="bankLohasAllocationMapper"  ref="bankLohasAllocationMapper"></property>
+	</bean> 
+	<bean id="bankControlLogService" class="com.app.service.impl.BankControlLogServiceImpl">
+		<property name="bankControlLogMapper" ref="bankControlLogMapper"/>
+	</bean>
+	<bean id="bankStagesWhiteListService" class="com.app.service.impl.BankStagesWhiteListServiceImpl">
+		<property name="bankStagesWhiteListMapper" ref="bankStagesWhiteListMapper"/>
+	</bean>
+	<!--温馨提示-->
+		<bean id="BankTypePromptService" class="com.app.service.impl.BankTypePromptServiceImpl">
+		<property name="bankTypePromptMapper" ref="bankTypePromptMapper"/>
+	</bean>
+
+	<bean id="bankPrCalendarService" class="com.app.service.impl.BankPrCalendarServiceImpl">
+		<property name="bankPrCalendarMapper" ref="bankPrCalendarMapper"/>
+	</bean>
+	
+	<bean id="bankTemporaryQuotaService" class="com.app.service.impl.BankTemporaryQuotaServiceImpl">
+		<property name="bankTemporaryQuotaMapper" ref="bankTemporaryQuotaMapper"/>
+	</bean>
+	
+	<bean id="bankMessageAllocationService" class="com.app.service.impl.BankMessageAllocationServiceImpl">
+		<property name="bankMessageAllocationMapper" ref="bankMessageAllocationMapper"/>
+	</bean>
+	<bean id="bankMessageRecordService" class="com.app.service.impl.BankMessageRecordServiceImpl">
+		<property name="bankMessageRecordMapper" ref="bankMessageRecordMapper"/>
+	</bean>
+	
+	<!-- <bean id="moduleFunctionNameService" class="com.app.service.impl.ModuleFunctionNameServiceImpl">
+		<property name="moduleFunctionNameMapper" ref="moduleFunctionNameMapper"/>
+	</bean> -->
+	
+	<bean id="bankMessageParameterConfService" class="com.app.service.impl.BankMessageParameterConfServiceImpl">
+		<property name="bankMessagePCMapper" ref="bankMessagePCMapper"/>
+	</bean>
+
+</beans>

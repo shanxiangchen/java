@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.RigthsTypeMapper">
+	<resultMap type="rightsType" id="RightsTypeResultMap">
+		<id column="RIGHTS_TYPE_ID" property="rigthsTypeId" />
+		<result column="RIGHTS_TYPE_CODE" property="rigthsTypeCode" />
+		<result column="RIGHTS_TYPE_NAME" property="rigthsTypeName" />
+		<result column="RIGHTS_TYPE_URL" property="rigthsTypeUrl" />
+		<result column="RIGHTS_TYPE_URL_NAME" property="rigthsTypeUrlName" />
+		<result column="RIGHTS_TYPE_ICON_URL" property="rigthsTypeIconUrl" />
+		<result column="RIGHTS_TYPE_ICON_URL_NAME" property="rigthsTypeIconUrlNmae" />
+		<result column="RIGHTS_PACKAGERK" property="rigthsPackagerk" />
+		<result column="RIGHTS_DESCRIBE" property="rigthsDescribe" />
+		<result column="RIGHTS_IN_DESCRIBE" property="rightsInDescribe" />
+		<result column="RIGHTS_DETAIL_BTN" property="rightsDetailBtn" />
+		<result column="RIGHTS_ORDER_BTN" property="rightsOrderBtn" />
+		<result column="RIGHTS_DETAIL_NAME" property="rightsDetailName" />
+		<result column="RIGHTS_ORDER_NAME" property="rightsOrderName" />
+		<result column="CALCULATION" property="calculation" />
+		<result column="RIGHTS_SELF_USED" property="rightsSelfUsed" />
+		<result column="RIGHTS_HEEL_USED" property="rightsHeelUsed" />
+		<result column="RIGHTS_TOGETHER_NUM" property="rightsTogetherNum" />
+		<result column="RIGHTS_MY_NUM" property="rightsMyNum" />
+		<result column="RIGHTS_MAX_BEFORE_DAY" property="rightsMaxBeforeDay" />
+		<result column="RIGHTS_BEFORE_DAY" property="rightsBeforeDay" />
+		<result column="RIGHTS_BEFORE_HOUR" property="rightsBeforeHour" />
+		<association property="rightsPackagerkMapping" column="RIGHTS_PACKAGERK_ID"
+			javaType="RightsPackagerkMapping">
+			<id column="RIGHTS_PACKAGERK_ID" property="rightsPackagerkId" />
+			<result column="RIGHTS_PACKAGERK_CODE" property="rightsPackagerkCode" />
+			<result column="RIGHTS_PACKAGERK_NAME" property="rightsPackagerkName" />
+		</association>
+	</resultMap>
+	<sql id="rigthsTypeColumns">rights_type_id,RIGHTS_TYPE_CODE,RIGHTS_TYPE_NAME,RIGHTS_TYPE_URL,
+		RIGHTS_TYPE_URL_NAME,RIGHTS_PACKAGERK,RIGHTS_TYPE_ICON_URL,RIGHTS_TYPE_ICON_URL_NAME,
+		RIGHTS_DESCRIBE,RIGHTS_DETAIL_BTN,RIGHTS_ORDER_BTN,RIGHTS_DETAIL_NAME,RIGHTS_ORDER_NAME,
+		RIGHTS_SELF_USED,RIGHTS_HEEL_USED,RIGHTS_IN_DESCRIBE,RIGHTS_TOGETHER_NUM,RIGHTS_MY_NUM,
+		CALCULATION,RIGHTS_MAX_BEFORE_DAY,RIGHTS_BEFORE_DAY,RIGHTS_BEFORE_HOUR
+	</sql>
+	<select id="getRightsTypeCodeByCode" parameterType="String" resultType="int">
+		select count(rights_type_code) from bank_pr_rights_type where rights_type_code = #{rightsTypeCode}
+	</select>
+	
+	<select id="rightsTypePageList" parameterType="rightsType"
+		resultMap="RightsTypeResultMap">
+		select
+		rt.rights_type_id,rt.rights_type_name,rt.rights_type_code,rt.rights_type_url,
+		rt.rights_type_url_name,rt.rights_type_icon_url,rt.rights_type_icon_url_name,
+		rpm.rights_packagerk_name,rt.rights_describe,rt.rights_detail_btn,rt.rights_order_btn,
+		rt.rights_detail_name,rt.rights_order_name,rt.rights_self_used,rt.rights_heel_used,
+		rt.rights_in_describe,rt.rights_together_num,rt.rights_my_num,rt.CALCULATION,
+		rt.rights_max_before_day,rt.rights_before_day,rt.rights_before_hour
+		from bank_pr_rights_type rt left join bank_rights_packagerk_mapping
+		rpm
+		on rt.rights_packagerk = rpm.rights_packagerk_code where 1=1
+		<if test="rigthsTypeName!=null and rigthsTypeName!=''">
+			and rt.rights_type_name like "%"#{rigthsTypeName}"%"
+		</if>
+	</select>
+	<insert id="saveRigthsType" parameterType="rightsType"
+		useGeneratedKeys="true" keyProperty="rigthsTypeId">
+		insert into bank_pr_rights_type(
+		<include refid="rigthsTypeColumns" />
+		)
+		values(#{rigthsTypeId},#{rigthsTypeCode,jdbcType=VARCHAR},#{rigthsTypeName,jdbcType=VARCHAR},
+		#{rigthsTypeUrl,jdbcType=VARCHAR},#{rigthsTypeUrlName,jdbcType=VARCHAR},#{rigthsPackagerk,jdbcType=VARCHAR},
+		#{rigthsTypeIconUrl,jdbcType=VARCHAR},#{rigthsTypeIconUrlNmae,jdbcType=VARCHAR},#{rigthsDescribe,jdbcType=VARCHAR},
+		#{rightsDetailBtn,jdbcType=VARCHAR},#{rightsOrderBtn,jdbcType=VARCHAR},#{rightsDetailName,jdbcType=VARCHAR},#{rightsOrderName,jdbcType=VARCHAR},
+		#{rightsSelfUsed,jdbcType=VARCHAR},#{rightsHeelUsed,jdbcType=VARCHAR},#{rightsInDescribe,jdbcType=VARCHAR},#{rightsTogetherNum},
+		#{rightsMyNum,jdbcType=VARCHAR},#{calculation,jdbcType=VARCHAR},#{rightsMaxBeforeDay,jdbcType=VARCHAR},
+		#{rightsBeforeDay,jdbcType=VARCHAR},#{rightsBeforeHour,jdbcType=VARCHAR})
+	</insert>
+	<update id="editRigthsType" parameterType="rightsType">
+		update bank_pr_rights_type b set
+		<!-- b.rights_type_code=#{rigthsTypeCode,jdbcType=VARCHAR}, -->
+		b.rights_type_name=#{rigthsTypeName,jdbcType=VARCHAR},
+		b.rights_type_url=#{rigthsTypeUrl,jdbcType=VARCHAR},
+		b.rights_type_url_name=#{rigthsTypeUrlName,jdbcType=VARCHAR},
+		b.rights_type_icon_url=#{rigthsTypeIconUrl,jdbcType=VARCHAR},
+		b.rights_type_icon_url_name=#{rigthsTypeIconUrlNmae,jdbcType=VARCHAR},
+		b.rights_packagerk=#{rigthsPackagerk,jdbcType=VARCHAR},
+		b.rights_describe=#{rigthsDescribe,jdbcType=VARCHAR},
+		b.rights_detail_btn=#{rightsDetailBtn,jdbcType=VARCHAR},
+		b.rights_order_btn=#{rightsOrderBtn,jdbcType=VARCHAR},
+		b.rights_detail_name=#{rightsDetailName,jdbcType=VARCHAR},
+		b.rights_order_name=#{rightsOrderName,jdbcType=VARCHAR},
+		b.rights_self_used=#{rightsSelfUsed,jdbcType=VARCHAR},
+		b.rights_heel_used=#{rightsHeelUsed,jdbcType=VARCHAR},
+		b.rights_in_describe=#{rightsInDescribe,jdbcType=VARCHAR},
+		b.rights_together_num=#{rightsTogetherNum,jdbcType=VARCHAR},
+		b.rights_my_num=#{rightsMyNum,jdbcType=VARCHAR},
+		b.calculation=#{calculation,jdbcType=VARCHAR},
+		b.rights_max_before_day=#{rightsMaxBeforeDay,jdbcType=VARCHAR},
+		b.rights_before_day=#{rightsBeforeDay,jdbcType=VARCHAR},
+		b.rights_before_hour=#{rightsBeforeHour,jdbcType=VARCHAR}
+		where b.rights_type_id=#{rigthsTypeId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectRigthsTypeByid" parameterType="String"
+		resultMap="RightsTypeResultMap">
+		select * from bank_pr_rights_type where RIGHTS_TYPE_ID=#{rigthsTypeId}
+	</select>
+	<delete id="delRigthsType" parameterType="String">
+		delete from bank_pr_rights_type where RIGHTS_TYPE_ID=#{rigthsTypeId}
+	</delete>
+	<select id="listrigthsSel" resultMap="RightsTypeResultMap">
+		select t.rights_type_code,t.rights_type_name,t.rights_order_btn,t.rights_self_used,t.rights_heel_used from
+		bank_pr_rights_type t
+	</select>
+	 
+</mapper>

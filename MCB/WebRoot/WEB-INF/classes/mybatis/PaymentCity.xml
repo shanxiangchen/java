@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.PaymentCityMapper">
+	<resultMap type="com.app.entity.PaymentCity" id="PaymentCityResultMap">
+		<id column="CITY_ID" property="cityId" />
+		<result column="CITY_CODE" property="cityCode" />
+		<result column="CITY_NAME" property="cityName" />
+	</resultMap>
+	<sql id="insertPaymentCity">CITY_CODE,CITY_NAME</sql>
+	<select id="listPagePaymentCity" parameterType="com.app.entity.PaymentCity"
+		resultMap="PaymentCityResultMap">
+		SELECT * FROM bank_payment_city e WHERE 1=1
+		<if test="cityName!=null and cityName!=''">
+			and CITY_NAME like "%"#{cityName}"%"
+		</if>
+	</select>
+
+	<insert id="addPaymentCity" parameterType="com.app.entity.PaymentCity"
+		useGeneratedKeys="false" keyProperty="cityId">
+		insert into bank_payment_city(
+		<include refid="insertPaymentCity" />
+		)
+		values(#{cityCode},#{cityName})
+	</insert>
+	<select id="getCountByName" parameterType="com.app.entity.PaymentCity"
+		resultType="Integer">
+		select count(CITY_ID) from bank_payment_city where
+		CITY_CODE=#{cityCode}
+	</select>
+	<select id="getPamentCityByid" parameterType="int"
+		resultMap="PaymentCityResultMap">
+		select * from bank_payment_city where CITY_ID=#{cityId}
+	</select>
+	<update id="deitPaymentCity" parameterType="com.app.entity.PaymentCity">
+		update
+		bank_payment_city set CITY_NAME=#{cityName} where CITY_ID=#{cityId}
+	</update>
+
+	<delete id="delPaymentCity" parameterType="int">
+		delete from
+		bank_payment_city where CITY_ID=#{cityId}
+	</delete>
+
+	<select id="listPayment" parameterType="com.app.entity.PaymentCity"
+		resultMap="PaymentCityResultMap">
+		select t.city_id,t.city_code,t.city_name,t.lev_num from bank_payment_city t
+	</select>
+</mapper>

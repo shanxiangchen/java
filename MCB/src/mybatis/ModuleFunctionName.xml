@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.AdvertMapper">
+	<resultMap type="ModuleFunctionName" id="moduleFunctionNameResultMap">
+		<id column="module_function_name_id" property="moduleFunctionNameId" />
+		<result column="module_function_name" property="moduleFunctionName" />
+		<result column="module_function_no" property="moduleFunctionNo" />
+		<result column="activity_title" property="activityTitle" />
+		<result column="shop_name" property="shopName" />
+		<result column="link_name" property="linkName" />
+	     
+		<!-- 一对多的关系 -->
+		<collection property="advert" ofType="Advert">
+			<id column="advert_id" property="advertId" />
+			<result column="advert_no" property="advertNo" />
+			<result column="advert_title" property="advertTitle" />
+			<result column="advert_picture" property="advertPicture" />
+			<result column="advert_pic_url" property="advertPicUrl" />
+			<result column="advert_type" property="advertType" />
+			<result column="advert_seat" property="advertSeat" />
+			<result column="CLIENT_TYPE" property="clientType" />
+			<result column="module_function_no" property="moduleFunctionNo" />
+			<result column="advert_url" property="advertUrl" />
+			<result column="advert_param" property="advertParam" />
+			<result column="LINK_NO" property="linkNo" />
+			<result column="ACTIVITY_NO" property="activityNo" />
+			<result column="SHOP_ID" property="shopId" />
+			<result column="LINK_TYPE" property="linkType" />
+		</collection>
+		
+		
+	</resultMap>
+	
+	<!--查看广告列表  -->
+	<select id="selectAdvertListPage" resultMap="moduleFunctionNameResultMap"
+		parameterType="ModuleFunctionName">
+		 
+		  select t.*, n.module_function_name,b.activity_title,c.shop_name,d.link_name
+		   from bank_advert t 
+		    left join bank_module_function_name n  on t.module_function_no = n.module_function_no
+		    left join bank_market_activity b on t.activity_no=b.activity_no
+		    left join bank_market_activity_shop c on  c.shop_id=t.shop_id 
+		    left join bank_in_link d on d.link_id=t.link_no
+		    where t.advert_one is null  
+		 <if test="advertTitle!=null and advertTitle!=''">
+	      and advert_title like concat('%',#{advertTitle},'%')
+         </if>
+		 
+		 <if test="order==3">
+			order by CLIENT_TYPE asc
+		 </if>
+		 <if test="order==4">
+			order by CLIENT_TYPE desc
+		 </if>
+		 <if test="order==null || order==''">
+			order by ADVERT_ID desc
+		 </if>  
+	</select>
+	 
+	<!--查询广告功能模块编号及功能模块名称  -->
+	<select id="selectAllModuleFunctionName" resultMap="moduleFunctionNameResultMap">
+	     select n.module_function_no, n.module_function_name from bank_module_function_name n 
+	</select>
+	<!--查询内链跳转对象表-->
+	<select id="selectAllLinkName" resultType="java.util.HashMap">
+	     select t.link_no as LINKNO,t.link_url as LINKURL,t.link_name as LINKNAME from bank_in_link t
+	</select>
+	<!--根据广告id查询 -->
+	<select id="selectAdvertById" resultMap="moduleFunctionNameResultMap"
+		parameterType="String">
+		select  t.* from bank_advert t
+		where  t.advert_id=#{advertId}
+	</select>
+	
+	<!--添加广告 -->
+	<insert id="insertAdvert" parameterType="Advert" keyProperty="advertId">
+		INSERT INTO
+		bank_advert(advert_id,advert_no,advert_title,advert_picture,advert_pic_url,advert_type,advert_seat,advert_one,advert_two,CLIENT_TYPE,module_function_no,advert_url,advert_param,LINK_NO,ACTIVITY_NO,SHOP_ID,LINK_TYPE)
+		VALUES(#{advertId},#{advertNo,jdbcType=VARCHAR},#{advertTitle},#{advertPicture},#{advertPicUrl,jdbcType=VARCHAR},#{advertType,jdbcType=VARCHAR},#{advertSeat,jdbcType=VARCHAR},null,null,#{clientType,jdbcType=VARCHAR},#{moduleFunctionNo,jdbcType=VARCHAR},#{advertUrl,jdbcType=VARCHAR},#{advertParam,jdbcType=VARCHAR},#{linkNo,jdbcType=VARCHAR},#{activityNo,jdbcType=VARCHAR},#{shopId},#{linkType,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--1 根据ID修改广告信息   -->
+	<update id="updateAdvertById" parameterType="Advert">
+		UPDATE
+		bank_advert p
+		SET
+		p.advert_no=#{advertNo,jdbcType=VARCHAR},
+		p.advert_title=#{advertTitle},
+		p.advert_type=#{advertType,jdbcType=VARCHAR},
+		<if test="advertPicUrl!=null and advertPicUrl!= '' and advertPicUrl!= 'null'">
+			p.advert_pic_url=#{advertPicUrl,jdbcType=VARCHAR},
+		</if>
+		p.advert_picture=#{advertPicture,jdbcType=VARCHAR},
+		p.advert_seat=#{advertSeat},
+		p.CLIENT_TYPE=#{clientType},
+		p.module_function_no=#{moduleFunctionNo},
+		p.advert_url=#{advertUrl,jdbcType=VARCHAR},
+		p.advert_param=#{advertParam,jdbcType=VARCHAR},
+		p.link_no=#{linkNo},
+        p.activity_no=#{activityNo},
+        p.shop_id=#{shopId},
+        p.link_type=#{linkType}
+		WHERE
+		p.advert_id=#{advertId}
+	</update>
+	
+	<!--2 根据ID修改广告信息 -->
+	<update id="updateAdvertByIds" parameterType="Advert">
+		UPDATE
+		bank_advert p
+		SET
+		p.advert_no=#{advertNo,jdbcType=VARCHAR},
+		p.advert_title=#{advertTitle,jdbcType=VARCHAR},
+		p.advert_type=#{advertType,jdbcType=VARCHAR},
+		p.advert_seat=#{advertSeat,jdbcType=VARCHAR},
+		p.CLIENT_TYPE=#{clientType,jdbcType=VARCHAR},
+		p.module_function_no=#{moduleFunctionNo,jdbcType=VARCHAR},
+		p.advert_url=#{advertUrl,jdbcType=VARCHAR},
+		p.advert_param=#{advertParam,jdbcType=VARCHAR},
+		p.link_no=#{linkNo,jdbcType=VARCHAR},
+        p.activity_no=#{activityNo,jdbcType=VARCHAR},
+        p.shop_id=#{shopId,jdbcType=VARCHAR},
+        p.link_type=#{linkType,jdbcType=VARCHAR}
+		WHERE
+		p.advert_id=#{advertId,jdbcType=VARCHAR}
+	</update>
+	
+	<resultMap type="Advert" id="advertResultMap">
+		<id column="advert_id" property="advertId" />
+		<result column="advert_no" property="advertNo" />
+		<result column="advert_title" property="advertTitle" />
+		<result column="advert_picture" property="advertPicture" />
+		<result column="advert_pic_url" property="advertPicUrl" />
+		<result column="advert_type" property="advertType" />
+		<result column="advert_seat" property="advertSeat" />
+		<result column="CLIENT_TYPE" property="clientType" />
+		<result column="module_function_no" property="moduleFunctionNo" />
+	</resultMap>
+	
+	<!-- 查询图片名称 -->
+	<select id="selectAdvertPicNameByAdvertId" resultMap="advertResultMap">
+	  		select advert_picture from bank_advert
+	   <where>
+			advert_id in
+			<foreach collection="array" item="item" index="index" open="("
+				separator="," close=")">#{item}</foreach>
+		</where> 
+	</select>
+	
+	<!--删除广告信息  -->
+	<update id="deleteAdvertById">
+		delete from bank_advert  
+		<where>
+			advert_id in
+			<foreach collection="array" item="item" index="index" open="("
+				separator="," close=")">#{item}</foreach>
+		</where>
+	</update>
+	
+	 
+</mapper>

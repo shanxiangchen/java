@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.BankEditorSaveMapper">
+ 
+	 <select id="selectBankEditorList"  resultType="com.app.entity.BankEditorSave">
+	    select 
+		  t.content as editorName,
+		  t.value as editorNum
+		 from bank_code_info t where t.code_type_id='EDITOR_TITLE'
+		  
+	 </select> 
+	 <select id="selectBankEditorInfoById" parameterType="java.lang.String" resultType="com.app.entity.BankEditorSave">
+	    select 
+			t.editor_id as editorId,
+			t.editor_info as editorInfo,
+			t.editor_num as editorNum
+		from 
+		BANK_EDITOR_SAVE t
+		where   t.editor_num=#{editorNum,jdbcType=VARCHAR}
+	     
+	 
+	 </select>
+	 
+	 <insert id="saveEditor" parameterType="com.app.entity.BankEditorSave">
+        insert into BANK_Editor_SAVE t (EDITOR_ID,EDITOR_INFO,EDITOR_NUM) 
+	    values(seq_bk_editor_save.nextval,#{editorInfo,jdbcType=VARCHAR},#{editorNum,jdbcType=VARCHAR})     
+     </insert>
+     <update id="updateEditor" parameterType="com.app.entity.BankEditorSave">
+        update BANK_Editor_SAVE b set
+          b.editor_info=#{editorInfo,jdbcType=VARCHAR},
+          b.editor_num=#{editorNum,jdbcType=VARCHAR}
+        where b.editor_id=#{editorId}
+     </update>
+     
+     
+	
+	 
+</mapper>

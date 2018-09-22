@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.RoleMapper">
+
+	<resultMap type="Role" id="roleResultMap">
+		<id column="role_id" property="roleId" />
+		<result column="role_name" property="roleName" />
+		<result column="rights" property="rights" />
+		<result column="permissions_category" property="permissionsCategory" />
+		<result column="role_Two" property="roleTwo" />
+	</resultMap>
+	
+	<select id="getUserNumById" parameterType="int" resultType="int">
+		select count(t.user_id) from bank_role_manage m left join bank_manage t on m.role_id = t.role_id
+		where m.role_id=#{roleId}
+	</select>
+	
+	<select id="getRolesList" parameterType="Role" resultMap="roleResultMap">
+		select role_id,role_name,rights,permissions_category from
+			bank_role_manage where role_name like concat('%',#{roleName},'%') 
+	</select>
+	<select id="getRolesListByNull" parameterType="Role" resultMap="roleResultMap">
+		select role_id,role_name,rights,permissions_category from
+			bank_role_manage where role_two=#{roleId}
+	</select>
+	
+	<select id="allRolesPageList" parameterType="Role" resultMap="roleResultMap">
+		select role_id,role_name,rights,permissions_category,role_two from
+		bank_role_manage where role_id=#{roleId}
+		ORDER BY role_id DESC
+	</select>
+	
+	<select id="getRolesByRoleTwo" parameterType="Role" resultMap="roleResultMap">
+		select role_id,role_name,rights,permissions_category,role_two from
+			bank_role_manage where role_two=#{roleId}
+	</select>
+ 
+	<select id="getCount" parameterType="Role" resultType="int">
+		SELECT COUNT(1) FROM bank_role_manage where 1=1
+		<if test="roleName!=null and roleName!=''">
+			and role_name like concat('%',#{roleName},'%')  
+		</if>
+	</select>
+
+	<select id="listAllRolesSels" parameterType="String" resultMap="roleResultMap">
+		select u.role_id,u.role_name,u.rights,u.PERMISSIONS_CATEGORY from
+		bank_role_manage u where u.role_id=#{roleTwo}
+	</select>
+	<select id="listAllRolesSel" parameterType="String" resultMap="roleResultMap">
+		select
+		u.role_id,
+		u.role_name,
+		u.rights,
+		u.PERMISSIONS_CATEGORY
+		from bank_role_manage u
+		where u.role_id!=#{roleTwo} and u.role_two=#{roleTwo}
+	</select>
+	<select id="listAllRoleByAdmin" resultMap="roleResultMap">
+	    select u.role_id,u.role_name,u.rights,u.PERMISSIONS_CATEGORY from
+			bank_role_manage u where u.role_id!='1'
+	</select>
+	<select id="getListAllRoless" parameterType="String" resultType="String">
+		select PERMISSIONS_CATEGORY from bank_role_manage u where u.role_id
+		=#{roleId}
+	</select>
+	<select id="getRoleById" parameterType="Integer" resultMap="roleResultMap">
+		select * from bank_role_manage where
+		role_id=#{roleId,JdbcType=Integer}
+	</select>
+	<select id="getCountByName" parameterType="Role" resultType="Integer">
+		select count(role_id) from bank_role_manage where
+		role_name=#{roleName,JdbcType=VARCHAR}
+		<if test="roleId!=null or roleId>0">
+			and role_id!=#{roleId,JdbcType=Integer}
+		</if>
+	</select>
+
+	<insert id="insertRole" parameterType="Role" keyProperty="roleId">
+		insert
+		into bank_role_manage
+		(role_name,PERMISSIONS_CATEGORY,role_Two,create_id)
+		values (#{roleName,jdbcType=VARCHAR},
+		#{permissionsCategory,jdbcType=VARCHAR},#{roleTwo,jdbcType=VARCHAR},#{createId,JdbcType=Integer})
+	</insert>
+
+	<update id="updateRoleBaseInfo" parameterType="Role">
+		update
+		bank_role_manage set permissions_category=#{permissionsCategory},role_name=#{roleName,JdbcType=VARCHAR} where
+		role_id=#{roleId,JdbcType=Integer}
+	</update>
+	<update id="updateRoleRights" parameterType="Role">
+		update
+		bank_role_manage set rights=#{rights,JdbcType=VARCHAR} where
+		role_id=#{roleId,JdbcType=Integer}
+	</update>
+	<delete id="deleteRoleById" parameterType="Integer">
+		delete from
+		bank_role_manage where role_id=#{roleId,JdbcType=Integer}
+	</delete>
+	
+	<select id="getAllChildRole" parameterType="java.util.Map" resultMap="roleResultMap">
+		select role_id,role_name,rights,permissions_category from
+			bank_role_manage where 1=1
+		and create_id in
+		<foreach item="user" index="index" collection="userList"
+			open="(" separator="," close=")">
+				'${user.userId}'
+			</foreach>
+			
+		<if test="role.roleName != null and role.roleName != ''">
+			and role_name like concat('%',#{role.roleName},'%')
+		</if>
+		
+		<!-- limit #{role.PageNo},#{role.pageSize} -->
+	</select>
+</mapper>

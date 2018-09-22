@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.MarketPictureMapper">
+	<resultMap type="MarketPicture" id="marketPictureResultMap">
+			<id column="picture_id" property="pictureId"/>
+			<result column="acPic_url" property="actPictureUrl"/>
+			<result column="acPic_name" property="actictureName"/>
+			<result column="acBigPic_url" property="acBigPicUrl" />
+			<result column="acBigPic_name" property="acBigPicName" />
+			<result column="shopPic_url" property="shopPictureUrl"/>
+			<result column="shopPic_name" property="shopPictureName"/>
+			<result column="picture_flag" property="pictureFlag"/>
+			<result column="picture_size" property="pictureSize" />
+	</resultMap>
+	<select id="selectMarketPictureList" resultMap="marketPictureResultMap">
+	   SELECT   p.`picture_name` acPic_name,p.`picture_url` acPic_url ,d.`picture_name` shopPic_name,d.`picture_url` shopPic_url
+		  FROM bank_market_picture p,bank_market_picture d
+		 WHERE p.`picture_id`=1
+		 AND d.`picture_id`=2
+	</select>
+	
+	<resultMap type="MarketPicture" id="marPicResultMap">
+			<id column="picture_id" property="pictureId"/>
+			<result column="picture_name" property="actictureName"/>
+			<result column="picture_flag" property="pictureFlag"/>
+	</resultMap>
+	<!--根据图片ID查询图片名称-->
+	<select id="selectPicNameByid" parameterType="java.lang.String"  resultType="java.lang.String">
+	   select p.picture_name from bank_market_picture p 
+	   <where>
+	     p.picture_id=#{pictureId,jdbcType=VARCHAR} 
+	   </where>
+	</select>
+	<!--根据活动ID查询图片名称  -->
+	<select id="selectActPicByPicId" resultMap="marPicResultMap">
+	   select 
+	    p.picture_name , 
+	    p.picture_flag 
+	   from 
+	    bank_market_picture p 
+	   <where>
+	     p.activity_id in
+			<foreach collection="array" item="item" index="index" open="("
+				separator="," close=")">#{item}</foreach>
+	   </where>
+	</select>
+</mapper>

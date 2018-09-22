@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mapper.BankControlLogMapper">
+		 
+	
+	<select id="selectBankControlLogPageList" resultType="BankControlLog" parameterType="BankControlLog">	
+	     select  
+			 t.control_id as controlId,
+			 t.control_act as controlAct,
+			 t.control_cause as controlCause,
+			 t.control_date as controlDate,
+			 t.control_phone as controlPhone,
+			 t.control_is_ok as controlIsOk,
+			 t.control_count as controlCount,
+			 t.control_cause_no as controlCauseNo,
+             t.CONTROL_TYPE as 	controlType		 
+		  from BANK_CONTROL_LOG t
+		  where 1=1
+	      <if test="controlAct!=null and controlAct!=''">
+			and control_act=#{controlAct}
+		 </if>
+		  <if test="controlDate!=null and controlDate!=''">
+			and Substr(t.control_date,0,10)=#{controlDate}
+		 </if>
+		 <if test="controlType!=null and controlType!=''">
+			and CONTROL_TYPE=#{controlType}
+		 </if>
+	      order by t.control_date desc,TO_NUMBER(t.control_phone)  
+	    
+	</select>
+	  
+	<select id="selectBankControlShowPageList" resultType="BankControlShow" parameterType="BankControlShow">	
+	   select 
+		 t.show_id as showId,
+		 t.show_type as showType,
+		 t.show_success_num as showSuccessNum,
+		 t.show_error_num as showErrorNum,
+		 t.show_is_ok as showIsOk,
+		 t.show_alarm_info as showAlarmInfo,
+		 t.show_remarks as showRemarks,
+		 t.show_insert_date as showInsertDate,
+		 t.show_insert_time as showInsertTime
+	   from bank_control_show t
+	   where 1=1 and t.show_is_ok='1'
+	     <if test="showType!=null and showType!=''">
+			and show_type=#{showType}
+		 </if>
+		 <if test="showAlarmInfo!=null and showAlarmInfo!=''">
+			and show_alarm_info like concat('%',#{showAlarmInfo},'%')
+		 </if>
+		 <if test="startDate!=null and startDate!=''">
+			and show_insert_time &gt;=#{startDate}
+		 </if>
+		 <if test="endDate!=null and endDate!=''">
+			and show_insert_time &lt;=#{endDate}
+		 </if>
+		 <if test="endDate!=null and endDate!='' and startDate!=null and startDate!=''">
+			and show_insert_time between(#{startDate}) and (#{endDate})
+		 </if>
+		  order by t.show_insert_time desc
+	</select>
+	<select id="getShowCount" resultType="int" parameterType="BankControlShow">
+	   select 
+		count(1)
+	   from bank_control_show t
+	   where 1=1 and t.show_is_ok='1'
+	   <if test="showType!=null and showType!=''">
+			and show_type=#{showType}
+		 </if>
+		 <if test="showAlarmInfo!=null and showAlarmInfo!=''">
+			and show_alarm_info like '%'||#{showAlarmInfo}||'%'
+		 </if>
+		 <if test="startDate!=null and startDate!=''">
+			and show_insert_time &gt;#{startDate}
+		 </if>
+		 <if test="endDate!=null and endDate!=''">
+			and show_insert_time &lt;#{endDate}
+		 </if>
+		 <if test="endDate!=null and endDate!='' and startDate!=null and startDate!=''">
+			and show_insert_time between(#{startDate}) and (#{endDate})
+		 </if>
+	</select> 
+	
+	<delete id="delControlShow">
+	     delete from bank_control_show b  
+		 <where>
+			b.show_id  in
+			<foreach collection="array" item="item" index="index" open="("
+				separator="," close=")">#{item}</foreach>
+		</where>
+	</delete>
+	<select id="selectControlConfigAll" resultType="java.util.HashMap">
+	    select 
+		 t.config_id as CONFIG_ID,
+		 t.config_type as CONFIG_TYPE,
+		 t.config_rate as CONFIG_RATE
+		from bank_control_config t
+	</select>
+	<update id="updateControlConfig" parameterType="java.util.HashMap">
+	     update bank_control_config b  
+	     set b.config_rate=#{configRate}
+	     where b.config_type=#{configType}
+		 
+	</update>
+	
+	 
+	
+	 
+	
+	<select id="selectControlLogById" resultType="BankControlLog" parameterType="String">
+	     select  
+			 t.control_id as controlId,
+			 t.control_act as controlAct,
+			 t.control_cause as controlCause,
+			 t.control_date as controlDate,
+			 t.control_phone as controlPhone,
+			 t.control_is_ok as controlIsOk,
+			 t.control_count as controlCount,
+			 t.control_cause_no as controlCauseNo,
+			 t.CONTROL_TYPE as 	controlType		
+		  from bank_control_log t
+		  where t.control_id=#{controlId,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="selectControCauseNo" resultType="String" parameterType="java.util.HashMap">
+	    select 
+		 a.control_cause_no
+		from bank_control_log a 
+		WHERE a.control_time between(#{bfTime,jdbcType=VARCHAR}) and (#{nowTime,jdbcType=VARCHAR})
+		group by a.control_cause_no
+	</select>
+	<select id="selectControlCount" resultType="int" parameterType="java.util.HashMap">
+	    select 
+		 count(1)
+		from bank_control_log t 
+		where t.control_cause_no=#{controlCauseNo,jdbcType=VARCHAR} and t.control_is_ok=#{controlIsOk,jdbcType=VARCHAR}
+		and t.control_time between(#{bfTime,jdbcType=VARCHAR}) and (#{nowTime,jdbcType=VARCHAR})
+	</select> 
+	<insert id="insertControlShow" parameterType="BankControlShow">
+	    insert into bank_control_show t(
+		     SHOW_ID,
+			 SHOW_TYPE,
+			 SHOW_SUCCESS_NUM,
+			 SHOW_ERROR_NUM,
+			 SHOW_ERROR_RATE,
+			 SHOW_IS_OK,
+			 SHOW_ALARM_INFO,
+			 SHOW_REMARKS,
+			 SHOW_INSERT_DATE,
+			 SHOW_INSERT_TIME
+		)
+		values(
+		 SEQ_BK_CONTROL_SHOW.NEXTVAL||(select to_char(sysdate,'YYYYMMDDHH24MISS') from dual),
+		 #{showType,jdbcType=VARCHAR},
+		 #{showSuccessNum,jdbcType=VARCHAR},
+		 #{showErrorNum,jdbcType=VARCHAR},
+		 #{showErrorRate,jdbcType=VARCHAR},
+		 #{showIsOk,jdbcType=VARCHAR},
+		 #{showAlarmInfo,jdbcType=VARCHAR},
+		 #{showRemarks,jdbcType=VARCHAR},
+		 #{showInsertDate,jdbcType=VARCHAR},
+		 #{showInsertTime,jdbcType=VARCHAR}
+		)
+	</insert> 
+	<select id="selectControlConfig" resultType="String" parameterType="String">
+	    select t.config_rate as configRate from bank_control_config t where t.config_type=#{controlCauseNo,jdbcType=VARCHAR}
+	</select>
+	<delete id="delControlLog"  parameterType="String">
+	     delete from bank_control_log t where t.control_date &lt;=#{controlDate,jdbcType=VARCHAR}
+	</delete>
+</mapper>
