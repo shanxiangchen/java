@@ -8,7 +8,7 @@ public class TestFor {
 		for(;flag;i++){
 			System.out.println("abcdefg"+i);
 		}
-
+		System.out.println();
 	}
 
 }
