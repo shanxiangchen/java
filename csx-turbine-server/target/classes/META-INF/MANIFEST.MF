@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
+Built-By: Administrator
+Build-Jdk: 10.0.1
 Implementation-Title: csx-turbine-server
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: Administrator
 Implementation-Vendor-Id: com.bosc
-Build-Jdk: 1.8.0_112
+Implementation-Vendor: Pivotal Software, Inc.
 Implementation-URL: https://projects.spring.io/spring-cloud/csx-turbin
  e-server
 Created-By: Maven Integration for Eclipse
-Implementation-Vendor: Pivotal Software, Inc.
 
