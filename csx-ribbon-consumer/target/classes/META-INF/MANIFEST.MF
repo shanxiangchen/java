@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
-Built-By: Administrator
-Build-Jdk: 10.0.1
 Implementation-Title: csx-ribbon-consumer
 Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Base
 Implementation-Vendor-Id: com.bosc
-Implementation-Vendor: Pivotal Software, Inc.
+Build-Jdk: 1.8.0_231
 Implementation-URL: http://projects.spring.io/spring-boot/csx-ribbon-c
  onsumer/
 Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
 
