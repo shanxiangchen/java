@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserDao">
+	<!-- 自定义返回结果集 -->
+	<resultMap id="userMap" type="user">
+		<result property="userId" column="user_id" javaType="java.lang.Integer"></result>
+		<result property="userName" column="user_name" javaType="java.lang.String"></result>
+		<result property="password" column="password" javaType="java.lang.String"></result>
+		<result property="nameCn" column="name_cn" javaType="java.lang.String"></result>
+		<result property="sex" column="sex" javaType="java.lang.String"></result>
+		<result property="phone" column="phone" javaType="java.lang.String"></result>
+		<result property="email" column="email" javaType="java.lang.String"></result>
+		<result property="birthday" column="birthday" javaType="java.util.Date"></result>
+		<result property="loginTime" column="login_date" javaType="java.util.Date"></result>
+		<result property="failTimes" column="fail_times" javaType="java.lang.Integer"></result>
+		<result property="useFlag" column="used_flag" javaType="java.lang.String"></result>
+	</resultMap>
+
+	<insert id="addUser" parameterType="user" useGeneratedKeys="true">
+		<selectKey keyProperty="userId" resultType="int" order="BEFORE">
+			select user_info_seq.nextval userId from dual
+		</selectKey>
+		insert into user_info (user_id, user_name, password, name_cn, sex, phone, email, birthday, used_flag) values
+		(#{userId},#{userName},#{password},#{nameCn},#{sex},#{phone},#{email},#{birthday},#{useFlag})
+	</insert>
+
+	<update id="updateUser" parameterType="user">
+		update user_info set
+		user_name=#{userName},password=#{password},name_cn=#{nameCn},sex=#{sex},phone=#{phone},email=#{email},birthday=#{birthday},login_date=#{loginTime},fail_times=#{failTimes},used_flag=#{useFlag} where
+		user_id=#{userId}
+	</update>
+
+	<delete id="deleteUser" parameterType="int">
+		delete from user_info where user_id=#{userId}
+	</delete>
+
+	<select id="queryUserByUserId" parameterType="int" resultMap="userMap">
+		select * from user_info where user_id=#{user_id}
+	</select>
+
+	<select id="queryUserByUserName" parameterType="string" resultMap="userMap">
+		select * from user_info where user_name=#{userName}
+	</select>
+	
+	<select id="queryAllUsers" resultMap="userMap">
+		select * from user_info
+	</select>
+
+
+</mapper>

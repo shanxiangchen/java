@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Layui HTML</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+</head>
+<body>
+
+</body>
+<script src="../layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer;
+        var form = layui.form;
+        layer.msg("Hello：" + [[${name}]]);
+    });
+</script>
+<body>
+	<h1>
+    	<span th:text="|你好：${name},请跟我来|"></span>
+	</h1>
+</body>
+</html>
